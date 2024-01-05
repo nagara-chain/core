@@ -27,6 +27,7 @@ pallet-grandpa = { git = "https://github.com/nagara-network/polkadot-sdk.git", b
 pallet-sudo = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 pallet-timestamp = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 pallet-transaction-payment = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
+sp-arithmetic = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 sp-api = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 sp-block-builder = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 sp-consensus-aura = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }

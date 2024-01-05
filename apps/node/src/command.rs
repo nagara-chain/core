@@ -5,7 +5,7 @@ use crate::{
     service,
 };
 use frame_benchmarking_cli::{BenchmarkCmd, ExtrinsicFactory, SUBSTRATE_REFERENCE_HARDWARE};
-use nagara_core_runtime::{Block, EXISTENTIAL_DEPOSIT};
+use nagara_core_runtime::{constants::EXISTENTIAL_DEPOSIT, Block};
 use sc_cli::SubstrateCli;
 use sc_service::PartialComponents;
 use sp_keyring::Sr25519Keyring;
