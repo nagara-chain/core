@@ -86,23 +86,16 @@ pub mod opaque {
     }
 }
 
-// To learn more about runtime versioning, see:
-// https://docs.substrate.io/main-docs/build/upgrade#runtime-versioning
 #[sp_version::runtime_version]
 pub const VERSION: RuntimeVersion = RuntimeVersion {
-    spec_name: create_runtime_str!("node-template"),
-    impl_name: create_runtime_str!("node-template"),
-    authoring_version: 1,
-    // The version of the runtime specification. A full node will not attempt to use its native
-    //   runtime in substitute for the on-chain Wasm runtime unless all of `spec_name`,
-    //   `spec_version`, and `authoring_version` are the same between Wasm and native.
-    // This value is set to 100 to notify Polkadot-JS App (https://polkadot.js.org/apps) to use
-    //   the compatible custom types.
-    spec_version: 100,
-    impl_version: 1,
+    impl_name: create_runtime_str!("nagara-core"),
+    spec_name: create_runtime_str!("nagara-core"),
     apis: RUNTIME_API_VERSIONS,
-    transaction_version: 1,
-    state_version: 1,
+    authoring_version: 2,
+    impl_version: 2,
+    spec_version: 124,
+    state_version: 2,
+    transaction_version: 6,
 };
 
 /// This determines the average expected block time that we are targeting.
@@ -122,8 +115,6 @@ pub const MINUTES: BlockNumber = 60_000 / (MILLISECS_PER_BLOCK as BlockNumber);
 pub const HOURS: BlockNumber = MINUTES * 60;
 pub const DAYS: BlockNumber = HOURS * 24;
 
-/// The version information used to identify this runtime when compiled
-/// natively.
 #[cfg(feature = "std")]
 pub fn native_version() -> NativeVersion {
     NativeVersion {

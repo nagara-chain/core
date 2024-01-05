@@ -17,16 +17,16 @@ codec = { package = "parity-scale-codec", version = "3.6.1", default-features = 
 scale-info = { version = "2.5.0", default-features = false, features = ["derive"] }
 
 # Base consensus & primitives
-pallet-aura = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
-pallet-balances = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
+frame-executive = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 frame-support = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
-pallet-grandpa = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
-pallet-sudo = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 frame-system = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 frame-try-runtime = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false, optional = true }
+pallet-aura = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
+pallet-balances = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
+pallet-grandpa = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
+pallet-sudo = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 pallet-timestamp = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 pallet-transaction-payment = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
-frame-executive = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 sp-api = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 sp-block-builder = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 sp-consensus-aura = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }

@@ -11,10 +11,11 @@ version = "1.1.0-alpha.1"
 
 [workspace]
 resolver = "2"
-members = ["libs/runtime"]
+members = ["apps/node", "libs/runtime"]
 
 [patch.crates-io]
 ss58-registry = { git = "https://github.com/nagara-network/ss58-registry", rev = "0542581" }
 
 [workspace.dependencies]
+nagara-core-runtime = { path = "libs/runtime" }
 ss58-registry = { git = "https://github.com/nagara-network/ss58-registry", rev = "0542581", default-features = false }
