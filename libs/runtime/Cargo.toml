@@ -40,6 +40,7 @@ sp-std = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = 
 sp-storage = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 sp-transaction-pool = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 sp-version = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
+ss58-registry = { workspace = true, default-features = false }
 
 # Used for the node template's RPCs
 frame-system-rpc-runtime-api = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
@@ -84,6 +85,7 @@ std = [
     "sp-storage/std",
     "sp-transaction-pool/std",
     "sp-version/std",
+    "ss58-registry/std",
     "substrate-wasm-builder",
 ]
 runtime-benchmarks = [

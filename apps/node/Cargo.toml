@@ -40,6 +40,7 @@ sp-io = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "
 sp-keyring = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0" }
 sp-runtime = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0" }
 sp-timestamp = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0" }
+ss58-registry = { workspace = true, default-features = true }
 
 # These dependencies are used for the node template's RPCs
 jsonrpsee = { version = "0.16.2", features = ["server"] }

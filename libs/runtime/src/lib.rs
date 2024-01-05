@@ -104,7 +104,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 /// up by `pallet_aura` to implement `fn slot_duration()`.
 ///
 /// Change this to adjust the block time.
-pub const MILLISECS_PER_BLOCK: u64 = 6000;
+pub const MILLISECS_PER_BLOCK: u64 = 3000;
 
 // NOTE: Currently it is not possible to change the slot duration after the
 // chain has started.       Attempting to do so will brick block production.
@@ -123,7 +123,7 @@ pub fn native_version() -> NativeVersion {
     }
 }
 
-const NORMAL_DISPATCH_RATIO: Perbill = Perbill::from_percent(75);
+const NORMAL_DISPATCH_RATIO: Perbill = Perbill::from_percent(90);
 
 parameter_types! {
     pub const BlockHashCount: BlockNumber = 2400;
@@ -135,8 +135,8 @@ parameter_types! {
             NORMAL_DISPATCH_RATIO,
         );
     pub BlockLength: frame_system::limits::BlockLength = frame_system::limits::BlockLength
-        ::max_with_normal_ratio(5 * 1024 * 1024, NORMAL_DISPATCH_RATIO);
-    pub const SS58Prefix: u8 = 42;
+        ::max_with_normal_ratio(8 * 1024 * 1024, NORMAL_DISPATCH_RATIO);
+    pub const SS58Prefix: u16 = ss58_registry::Ss58AddressFormatRegistry::NagaraAccount as u16;
 }
 
 // Configure FRAME pallets to include in runtime.

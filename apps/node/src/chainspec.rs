@@ -8,6 +8,7 @@ use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 use sp_consensus_grandpa::AuthorityId as GrandpaId;
 use sp_core::{sr25519, Pair, Public};
 use sp_runtime::traits::{IdentifyAccount, Verify};
+use ss58_registry::{Ss58AddressFormatRegistry, Token, TokenRegistry};
 
 // The URL for the telemetry server.
 const STAGING_TELEMETRY_URL: &str = "wss://telemetry.polkadot.io/submit/";
@@ -71,7 +72,7 @@ pub fn development_config() -> Result<ChainSpec, String> {
         None,
         None,
         // Properties
-        None,
+        Some(get_properties()),
         // Extensions
         None,
     ))
@@ -119,10 +120,22 @@ pub fn testnet_config() -> Result<ChainSpec, String> {
         None,
         // Properties
         None,
-        None,
+        Some(get_properties()),
         // Extensions
         None,
     ))
+}
+
+/// Chain properties
+fn get_properties() -> sc_service::Properties {
+    let token = Token::from(TokenRegistry::Ngr);
+    let token_format = Ss58AddressFormatRegistry::NagaraAccount as u16;
+    let mut properties = sc_service::Properties::new();
+    properties.insert("tokenDecimals".to_owned(), token.decimals.into());
+    properties.insert("ss58Format".to_owned(), token_format.into());
+    properties.insert("tokenSymbol".to_owned(), token.name.into());
+
+    properties
 }
 
 /// Configure initial storage state for FRAME modules.
