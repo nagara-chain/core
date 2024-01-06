@@ -15,6 +15,7 @@ pub mod sudo;
 pub mod system;
 pub mod timestamp;
 pub mod transaction_payment;
+pub mod utility;
 pub mod validator_set;
 
 pub type AccountId = <<crate::Signature as sp_runtime::traits::Verify>::Signer as sp_runtime::traits::IdentifyAccount>::AccountId;
@@ -121,6 +122,7 @@ construct_runtime!(
         Grandpa: pallet_grandpa = 6,
         TransactionPayment: pallet_transaction_payment = 7,
         Sudo: pallet_sudo = 8,
+        Utility: pallet_utility = 9,
     }
 );
 
