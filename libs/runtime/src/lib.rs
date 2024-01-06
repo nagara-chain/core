@@ -111,16 +111,16 @@ parameter_types! {
 }
 
 construct_runtime!(
-    pub struct Runtime {
-        System: frame_system,
-        Timestamp: pallet_timestamp,
-        ValidatorSet: substrate_validator_set,
-        Session: pallet_session,
-        Aura: pallet_aura,
-        Grandpa: pallet_grandpa,
-        Balances: pallet_balances,
-        TransactionPayment: pallet_transaction_payment,
-        Sudo: pallet_sudo,
+    pub enum Runtime {
+        System: frame_system = 0,
+        Timestamp: pallet_timestamp = 1,
+        Balances: pallet_balances = 2,
+        ValidatorSet: substrate_validator_set = 3,
+        Session: pallet_session = 4,
+        Aura: pallet_aura = 5,
+        Grandpa: pallet_grandpa = 6,
+        TransactionPayment: pallet_transaction_payment = 7,
+        Sudo: pallet_sudo = 8,
     }
 );
 
