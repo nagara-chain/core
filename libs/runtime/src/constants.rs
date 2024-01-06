@@ -1,10 +1,13 @@
 // region: consensus
 
 pub const ALLOW_MULTIPLE_BLOCKS_PER_SLOT: bool = false;
+pub const AUTHORITY_SESSION_OFFSET: u32 = 0;
+pub const AUTHORITY_SESSION_PERIOD: u32 = 2 * MINUTES;
 pub const CONSENSUS_SLOT_DURATION: u64 = BLOCKTIME_MS;
 pub const MAX_AUTHORITIES: u32 = 16;
 pub const MAX_NOMINATORS: u32 = 0;
 pub const MAX_SET_ID_SESSION_ENTRIES: u64 = 0;
+pub const MIN_AUTHORITIES: u32 = 1;
 pub const NORMAL_DISPATCH_RATIO: sp_runtime::Perbill = sp_runtime::Perbill::from_percent(90);
 
 // endregion

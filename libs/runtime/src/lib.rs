@@ -15,6 +15,7 @@ pub mod sudo;
 pub mod system;
 pub mod timestamp;
 pub mod transaction_payment;
+pub mod validator_set;
 
 pub type AccountId = <<crate::Signature as sp_runtime::traits::Verify>::Signer as sp_runtime::traits::IdentifyAccount>::AccountId;
 pub type Address = sp_runtime::MultiAddress<crate::AccountId, ()>;
@@ -113,6 +114,8 @@ construct_runtime!(
     pub struct Runtime {
         System: frame_system,
         Timestamp: pallet_timestamp,
+        ValidatorSet: substrate_validator_set,
+        Session: pallet_session,
         Aura: pallet_aura,
         Grandpa: pallet_grandpa,
         Balances: pallet_balances,
