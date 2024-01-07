@@ -28,8 +28,8 @@ pallet-sudo = { git = "https://github.com/nagara-network/polkadot-sdk.git", bran
 pallet-timestamp = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 pallet-transaction-payment = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 pallet-utility = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
-sp-arithmetic = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 sp-api = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
+sp-arithmetic = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 sp-block-builder = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 sp-consensus-aura = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 sp-consensus-grandpa = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
@@ -53,8 +53,14 @@ frame-benchmarking = { git = "https://github.com/nagara-network/polkadot-sdk.git
 frame-system-benchmarking = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false, optional = true }
 
 # ValidatorSet
-substrate-validator-set = { git = "https://github.com/nagara-network/substrate-validator-set.git", rev = "50aa3cd", default-features = false }
 pallet-session = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
+substrate-validator-set = { git = "https://github.com/nagara-network/substrate-validator-set.git", rev = "50aa3cd", default-features = false }
+
+# Smart Contracts
+pallet-assets = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
+pallet-contracts = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
+pallet-contracts-primitives = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
+pallet-insecure-randomness-collective-flip = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", default-features = false }
 
 [build-dependencies]
 substrate-wasm-builder = { git = "https://github.com/nagara-network/polkadot-sdk.git", branch = "nagara-v1.1.0", optional = true }
@@ -70,9 +76,13 @@ std = [
     "frame-system-rpc-runtime-api/std",
     "frame-system/std",
     "frame-try-runtime?/std",
+    "pallet-assets/std",
     "pallet-aura/std",
     "pallet-balances/std",
+    "pallet-contracts-primitives/std",
+    "pallet-contracts/std",
     "pallet-grandpa/std",
+    "pallet-insecure-randomness-collective-flip/std",
     "pallet-session/std",
     "pallet-sudo/std",
     "pallet-timestamp/std",
@@ -93,8 +103,8 @@ std = [
     "sp-transaction-pool/std",
     "sp-version/std",
     "ss58-registry/std",
-    "substrate-wasm-builder",
     "substrate-validator-set/std",
+    "substrate-wasm-builder",
 ]
 runtime-benchmarks = [
     "frame-benchmarking/runtime-benchmarks",
@@ -102,22 +112,10 @@ runtime-benchmarks = [
     "frame-system-benchmarking/runtime-benchmarks",
     "frame-system/runtime-benchmarks",
     "pallet-balances/runtime-benchmarks",
+    "pallet-contracts/runtime-benchmarks",
     "pallet-grandpa/runtime-benchmarks",
     "pallet-sudo/runtime-benchmarks",
     "pallet-timestamp/runtime-benchmarks",
     "sp-runtime/runtime-benchmarks",
-]
-try-runtime = [
-    "frame-executive/try-runtime",
-    "frame-support/try-runtime",
-    "frame-system/try-runtime",
-    "frame-try-runtime/try-runtime",
-    "pallet-aura/try-runtime",
-    "pallet-balances/try-runtime",
-    "pallet-grandpa/try-runtime",
-    "pallet-sudo/try-runtime",
-    "pallet-timestamp/try-runtime",
-    "pallet-transaction-payment/try-runtime",
-    "sp-runtime/try-runtime",
 ]
 experimental = ["pallet-aura/experimental"]

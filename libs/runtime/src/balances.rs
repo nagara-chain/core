@@ -10,6 +10,6 @@ impl pallet_balances::Config for crate::Runtime {
     type MaxReserves = ();
     type ReserveIdentifier = [u8; 8];
     type RuntimeEvent = crate::RuntimeEvent;
-    type RuntimeHoldReason = ();
+    type RuntimeHoldReason = crate::RuntimeHoldReason;
     type WeightInfo = pallet_balances::weights::SubstrateWeight<crate::Runtime>;
 }

@@ -76,12 +76,3 @@ runtime-benchmarks = [
     "sc-service/runtime-benchmarks",
     "sp-runtime/runtime-benchmarks",
 ]
-# Enable features that allow the runtime to be tried and debugged. Name might be subject to change
-# in the near future.
-try-runtime = [
-    "frame-system/try-runtime",
-    "nagara-core-runtime/try-runtime",
-    "pallet-transaction-payment/try-runtime",
-    "sp-runtime/try-runtime",
-    "try-runtime-cli/try-runtime",
-]

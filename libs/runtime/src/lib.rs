@@ -6,9 +6,11 @@
 #[cfg(feature = "std")]
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
+pub mod assets;
 pub mod aura;
 pub mod balances;
 pub mod constants;
+pub mod contracts;
 pub mod grandpa;
 pub mod opaque;
 pub mod sudo;
@@ -99,19 +101,26 @@ pub fn native_version() -> sp_version::NativeVersion {
 }
 
 parameter_types! {
+    pub const ApprovalDeposit: Balance = constants::ERC20_APPROVAL_DEPOSIT;
+    pub const AssetDeposit: Balance = constants::ERC20_CREATION_DEPOSIT;
     pub const BlockHashCount: crate::BlockNumber = 2400;
+    pub const MetadataDepositBase: Balance = constants::ERC20_METADATA_DEPOSIT_PER_ITEM;
+    pub const MetadataDepositPerByte: Balance = constants::ERC20_METADATA_DEPOSIT_PER_BYTE;
+    pub const SS58Prefix: u16 = ss58_registry::Ss58AddressFormatRegistry::NagaraAccount as u16;
+    pub const StringLimit: u32 = constants::ERC20_STRING_LIMIT;
+    pub const Version: sp_version::RuntimeVersion = crate::VERSION;
     pub BlockWeights: frame_system::limits::BlockWeights =
         frame_system::limits::BlockWeights::with_sensible_defaults(
             Weight::from_parts(crate::constants::BLOCKTIME_COMPUTE_BUDGET, u64::MAX),
             crate::constants::NORMAL_DISPATCH_RATIO,
         );
     pub BlockLength: frame_system::limits::BlockLength = frame_system::limits::BlockLength::max_with_normal_ratio(8 * 1024 * 1024, crate::constants::NORMAL_DISPATCH_RATIO);
-    pub const SS58Prefix: u16 = ss58_registry::Ss58AddressFormatRegistry::NagaraAccount as u16;
-    pub const Version: sp_version::RuntimeVersion = crate::VERSION;
+    pub CodeHashLockupDepositPercent: Perbill = Perbill::from_percent(30);
+    pub ContractSchedule: pallet_contracts::Schedule<Runtime> = Default::default();
     pub FeeMultiplier: pallet_transaction_payment::Multiplier = <pallet_transaction_payment::Multiplier as sp_runtime::traits::One>::one();
 }
 
-construct_runtime!(
+frame_support::construct_runtime!(
     pub enum Runtime {
         System: frame_system = 0,
         Timestamp: pallet_timestamp = 1,
@@ -123,6 +132,9 @@ construct_runtime!(
         TransactionPayment: pallet_transaction_payment = 7,
         Sudo: pallet_sudo = 8,
         Utility: pallet_utility = 9,
+        RandomnessCollectiveFlip: pallet_insecure_randomness_collective_flip = 10,
+        Contracts: pallet_contracts = 11,
+        Assets: pallet_assets = 12,
     }
 );
 
@@ -135,9 +147,10 @@ mod benches {
     define_benchmarks!(
         [frame_benchmarking, BaselineBench::<crate::Runtime>]
         [frame_system, SystemBench::<crate::Runtime>]
-        [pallet_balances, crate::Balances]
         [pallet_timestamp, crate::Timestamp]
+        [pallet_balances, crate::Balances]
         [pallet_sudo, crate::Sudo]
+        [pallet_contracts, Contracts]
     );
 }
 
@@ -350,28 +363,6 @@ sp_api::impl_runtime_apis! {
             add_benchmarks!(params, batches);
 
             Ok(batches)
-        }
-    }
-
-    #[cfg(feature = "try-runtime")]
-    impl frame_try_runtime::TryRuntime<crate::Block> for crate::Runtime {
-        fn on_runtime_upgrade(checks: frame_try_runtime::UpgradeCheckSelect) -> (crate::Weight, crate::Weight) {
-            // NOTE: intentional unwrap: we don't want to propagate the error backwards, and want to
-            // have a backtrace here. If any of the pre/post migration checks fail, we shall stop
-            // right here and right now.
-            let weight = crate::Executive::try_runtime_upgrade(checks).unwrap();
-            (weight, crate::BlockWeights::get().max_block)
-        }
-
-        fn execute_block(
-            block: crate::Block,
-            state_root_check: bool,
-            signature_check: bool,
-            select: frame_try_runtime::TryStateSelect
-        ) -> crate::Weight {
-            // NOTE: intentional unwrap: we don't want to propagate the error backwards, and want to
-            // have a backtrace here.
-            crate::Executive::try_execute_block(block, state_root_check, signature_check, select).expect("execute-block failed")
         }
     }
 }
