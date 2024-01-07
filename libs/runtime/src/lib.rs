@@ -12,6 +12,7 @@ pub mod balances;
 pub mod constants;
 pub mod contracts;
 pub mod grandpa;
+pub mod identity;
 pub mod multisig;
 pub mod opaque;
 pub mod sudo;
@@ -107,6 +108,7 @@ parameter_types! {
     pub const BlockHashCount: crate::BlockNumber = 2400;
     pub const DepositBase: Balance = constants::MULTISIG_DEPOSIT_BASE;
     pub const DepositFactor: Balance = constants::MULTISIG_DEPOSIT_FACTOR;
+    pub const MaxAdditionalFields: u32 = constants::IDENTITY_MAX_ADDITIONAL_FIELDS;
     pub const MetadataDepositBase: Balance = constants::ERC20_METADATA_DEPOSIT_PER_ITEM;
     pub const MetadataDepositPerByte: Balance = constants::ERC20_METADATA_DEPOSIT_PER_BYTE;
     pub const SS58Prefix: u16 = ss58_registry::Ss58AddressFormatRegistry::NagaraAccount as u16;
@@ -139,6 +141,7 @@ frame_support::construct_runtime!(
         Contracts: pallet_contracts = 11,
         Assets: pallet_assets = 12,
         Multisig: pallet_multisig = 13,
+        Identity: pallet_identity = 14,
     }
 );
 

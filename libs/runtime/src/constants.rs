@@ -30,7 +30,7 @@ pub const WEIGHT_TIME: u64 = 1;
 
 // endregion
 
-// region: balance const
+// region: accounts & balances const
 
 pub const DEPOSIT_PER_BYTE: crate::Balance = get_fee(0, 1);
 pub const DEPOSIT_PER_ITEM: crate::Balance = get_fee(1, 0);
@@ -40,6 +40,11 @@ pub const ERC20_METADATA_DEPOSIT_PER_BYTE: crate::Balance = DEPOSIT_PER_BYTE;
 pub const ERC20_METADATA_DEPOSIT_PER_ITEM: crate::Balance = DEPOSIT_PER_ITEM;
 pub const ERC20_STRING_LIMIT: u32 = 256;
 pub const EXISTENTIAL_DEPOSIT: crate::Balance = TOKEN_MICROS;
+pub const IDENTITY_BASIC_DEPOSIT: crate::Balance = TOKEN;
+pub const IDENTITY_BYTE_DEPOOSIT: crate::Balance = get_fee(0, 1);
+pub const IDENTITY_MAX_ADDITIONAL_FIELDS: u32 = 128;
+pub const IDENTITY_MAX_SUB_ACCOUNTS: u32 = 256;
+pub const IDENTITY_SUB_ACCOUNT_DEPOSIT: crate::Balance = 100 * TOKEN_CENTS;
 pub const MAX_ACCOUNT_LOCKS: u32 = 50;
 pub const MIN_GAS_FEE: crate::Balance = get_fee(1, 0);
 pub const MULTISIG_DEPOSIT_BASE: crate::Balance = get_fee(1, MULTISIG_SIZE);
