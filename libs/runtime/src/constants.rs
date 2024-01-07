@@ -46,6 +46,7 @@ pub const MULTISIG_DEPOSIT_BASE: crate::Balance = get_fee(1, MULTISIG_SIZE);
 pub const MULTISIG_DEPOSIT_FACTOR: crate::Balance = get_fee(0, MULTISIG_KEY_SIZE);
 pub const MULTISIG_EXT_SIZE: u32 = 4 + 4 + 16 + 32;
 pub const MULTISIG_KEY_SIZE: u32 = 32;
+pub const MULTISIG_MAX_PARTICIPANTS: u32 = 32;
 pub const MULTISIG_SIZE: u32 = MULTISIG_KEY_SIZE + MULTISIG_EXT_SIZE;
 pub const OPERATIONAL_FEE_MULTIPLIER: u8 = 5;
 pub const REF_TIME_GAS_FEE_DIVIDER: u64 = 16 * 1024;

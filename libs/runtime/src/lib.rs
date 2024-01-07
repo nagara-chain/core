@@ -12,6 +12,7 @@ pub mod balances;
 pub mod constants;
 pub mod contracts;
 pub mod grandpa;
+pub mod multisig;
 pub mod opaque;
 pub mod sudo;
 pub mod system;
@@ -104,6 +105,8 @@ parameter_types! {
     pub const ApprovalDeposit: Balance = constants::ERC20_APPROVAL_DEPOSIT;
     pub const AssetDeposit: Balance = constants::ERC20_CREATION_DEPOSIT;
     pub const BlockHashCount: crate::BlockNumber = 2400;
+    pub const DepositBase: Balance = constants::MULTISIG_DEPOSIT_BASE;
+    pub const DepositFactor: Balance = constants::MULTISIG_DEPOSIT_FACTOR;
     pub const MetadataDepositBase: Balance = constants::ERC20_METADATA_DEPOSIT_PER_ITEM;
     pub const MetadataDepositPerByte: Balance = constants::ERC20_METADATA_DEPOSIT_PER_BYTE;
     pub const SS58Prefix: u16 = ss58_registry::Ss58AddressFormatRegistry::NagaraAccount as u16;
@@ -135,6 +138,7 @@ frame_support::construct_runtime!(
         RandomnessCollectiveFlip: pallet_insecure_randomness_collective_flip = 10,
         Contracts: pallet_contracts = 11,
         Assets: pallet_assets = 12,
+        Multisig: pallet_multisig = 13,
     }
 );
 
