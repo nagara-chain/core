@@ -1,0 +1,9 @@
+artifacts/
+data/
+
+**/*.chainspec.json
+**/*.identity.json
+**/*.key
+**/*.ngr-ffa
+**/*.ngr-ppv
+**/*.tgz
