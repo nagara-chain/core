@@ -1,7 +1,7 @@
 use nagara_core_runtime::opaque::SessionKeys;
 use nagara_core_runtime::{
-    AccountId, AuraConfig, BalancesConfig, GrandpaConfig, RuntimeGenesisConfig, SessionConfig, Signature,
-    SudoConfig, SystemConfig, ValidatorSetConfig, WASM_BINARY,
+    AccountId, AuraConfig, BalancesConfig, ContractsConfig, GrandpaConfig, RuntimeGenesisConfig,
+    SessionConfig, Signature, SudoConfig, SystemConfig, ValidatorSetConfig, WASM_BINARY,
 };
 use sc_service::ChainType;
 use sc_telemetry::TelemetryEndpoints;
@@ -187,9 +187,12 @@ fn testnet_genesis(
             ..Default::default()
         },
         sudo: SudoConfig {
-            key: Some(root_key),
+            key: Some(root_key.clone()),
         },
         transaction_payment: Default::default(),
         assets: Default::default(),
+        contracts: ContractsConfig {
+            contract_master: Some(root_key),
+        },
     }
 }

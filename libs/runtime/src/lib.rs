@@ -40,6 +40,10 @@ pub type Executive = frame_executive::Executive<
     crate::Runtime,
     crate::AllPalletsWithSystem,
 >;
+pub type EventRecord = frame_system::EventRecord<
+    <crate::Runtime as frame_system::Config>::RuntimeEvent,
+    <crate::Runtime as frame_system::Config>::Hash,
+>;
 pub type GrandpaId = sp_consensus_grandpa::AuthorityId;
 pub type Hash = sp_core::H256;
 pub type Header = sp_runtime::generic::Header<BlockNumber, sp_runtime::traits::BlakeTwo256>;
@@ -87,11 +91,11 @@ pub const VERSION: sp_version::RuntimeVersion = sp_version::RuntimeVersion {
     impl_name: sp_runtime::create_runtime_str!("nagara-core"),
     spec_name: sp_runtime::create_runtime_str!("nagara-core"),
     apis: crate::RUNTIME_API_VERSIONS,
-    authoring_version: 2,
-    impl_version: 2,
-    spec_version: 124,
+    authoring_version: 3,
+    impl_version: 4,
+    spec_version: 125,
     state_version: 2,
-    transaction_version: 6,
+    transaction_version: 7,
 };
 
 #[cfg(feature = "std")]
@@ -120,7 +124,6 @@ parameter_types! {
             crate::constants::NORMAL_DISPATCH_RATIO,
         );
     pub BlockLength: frame_system::limits::BlockLength = frame_system::limits::BlockLength::max_with_normal_ratio(8 * 1024 * 1024, crate::constants::NORMAL_DISPATCH_RATIO);
-    pub CodeHashLockupDepositPercent: Perbill = Perbill::from_percent(30);
     pub ContractSchedule: pallet_contracts::Schedule<Runtime> = Default::default();
     pub FeeMultiplier: pallet_transaction_payment::Multiplier = <pallet_transaction_payment::Multiplier as sp_runtime::traits::One>::one();
 }
@@ -329,6 +332,73 @@ sp_api::impl_runtime_apis! {
 
         fn query_length_to_fee(length: u32) -> crate::Balance {
             crate::TransactionPayment::length_to_fee(length)
+        }
+    }
+
+    impl pallet_contracts::ContractsApi<crate::Block, crate::AccountId, crate::Balance, crate::BlockNumber, crate::Hash, crate::EventRecord>
+        for crate::Runtime
+    {
+        fn call(
+            origin: crate::AccountId,
+            dest: crate::AccountId,
+            value: crate::Balance,
+            gas_limit: Option<Weight>,
+            storage_deposit_limit: Option<crate::Balance>,
+            input_data: Vec<u8>,
+        ) -> pallet_contracts_primitives::ContractExecResult<crate::Balance, crate::EventRecord> {
+            let gas_limit = gas_limit.unwrap_or(crate::BlockWeights::get().max_block);
+            crate::Contracts::bare_call(
+                origin,
+                dest,
+                value,
+                gas_limit,
+                storage_deposit_limit,
+                input_data,
+                contracts::CONTRACTS_DEBUG_OUTPUT,
+                contracts::CONTRACTS_EVENTS,
+                pallet_contracts::Determinism::Enforced,
+            )
+        }
+
+        fn instantiate(
+            origin: crate::AccountId,
+            value: crate::Balance,
+            gas_limit: Option<Weight>,
+            storage_deposit_limit: Option<crate::Balance>,
+            code: pallet_contracts_primitives::Code<crate::Hash>,
+            data: Vec<u8>,
+            salt: Vec<u8>,
+        ) -> pallet_contracts_primitives::ContractInstantiateResult<crate::AccountId, crate::Balance, crate::EventRecord>
+        {
+            let gas_limit = gas_limit.unwrap_or(crate::BlockWeights::get().max_block);
+            crate::Contracts::bare_instantiate(
+                origin,
+                value,
+                gas_limit,
+                storage_deposit_limit,
+                code,
+                data,
+                salt,
+                contracts::CONTRACTS_DEBUG_OUTPUT,
+                contracts::CONTRACTS_EVENTS,
+            )
+        }
+
+        fn upload_code(
+            origin: crate::AccountId,
+            code: Vec<u8>,
+            storage_deposit_limit: Option<crate::Balance>,
+            determinism: pallet_contracts::Determinism,
+        ) -> pallet_contracts_primitives::CodeUploadResult<crate::Hash, crate::Balance>
+        {
+            Contracts::bare_upload_code(origin, code, storage_deposit_limit, determinism)
+        }
+
+        fn get_storage(
+            address: crate::AccountId,
+            key: Vec<u8>,
+        ) -> pallet_contracts_primitives::GetStorageResult {
+            Contracts::get_storage(address, key)
         }
     }
 
