@@ -3970,6 +3970,7 @@ dependencies = [
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
  "frame-try-runtime",
+ "nagara-core-servicer-registry",
  "pallet-assets",
  "pallet-aura",
  "pallet-balances",
@@ -4004,6 +4005,22 @@ dependencies = [
  "ss58-registry",
  "substrate-validator-set",
  "substrate-wasm-builder",
+]
+
+[[package]]
+name = "nagara-core-servicer-registry"
+version = "1.0.24-alpha.1"
+dependencies = [
+ "frame-support",
+ "frame-system",
+ "pallet-identity",
+ "pallet-sudo",
+ "parity-scale-codec",
+ "scale-info",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-std",
 ]
 
 [[package]]

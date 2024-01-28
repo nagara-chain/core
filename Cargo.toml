@@ -11,11 +11,62 @@ version = "1.0.24-alpha.1"
 
 [workspace]
 resolver = "2"
-members = ["apps/node", "libs/runtime"]
+members = ["apps/node", "libs/runtime", "libs/pallet-servicer-registry"]
 
 [patch.crates-io]
 ss58-registry = { git = "https://github.com/nagara-network/ss58-registry", rev = "0542581" }
 
 [workspace.dependencies]
+# Local
 nagara-core-runtime = { path = "libs/runtime" }
+nagara-core-servicer-registry = { path = "libs/pallet-servicer-registry", default-features = false }
+# Others
+codec = { package = "parity-scale-codec", version = "3.6.1", default-features = false, features = [
+    "derive",
+] }
+scale-info = { version = "2.5.0", default-features = false, features = ["derive"] }
 ss58-registry = { git = "https://github.com/nagara-network/ss58-registry", rev = "0542581", default-features = false }
+# Base consensus & primitives
+frame-executive = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+frame-support = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+frame-system = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+frame-try-runtime = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+pallet-aura = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+pallet-balances = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+pallet-grandpa = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+pallet-sudo = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+pallet-timestamp = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+pallet-transaction-payment = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+pallet-utility = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+sp-api = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+sp-arithmetic = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+sp-block-builder = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+sp-consensus-aura = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+sp-consensus-grandpa = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+sp-core = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+sp-inherents = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+sp-io = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+sp-offchain = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+sp-runtime = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+sp-session = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+sp-std = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+sp-storage = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+sp-transaction-pool = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+sp-version = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+# Used for the node template's RPCs
+frame-system-rpc-runtime-api = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+pallet-transaction-payment-rpc-runtime-api = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+# Used for runtime benchmarking
+frame-benchmarking = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+frame-system-benchmarking = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+# ValidatorSet
+pallet-session = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+substrate-validator-set = { git = "https://github.com/nagara-network/substrate-validator-set.git", branch = "nagara-v1.0.0", default-features = false }
+# Smart Contracts
+pallet-assets = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+pallet-contracts = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+pallet-contracts-primitives = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+pallet-insecure-randomness-collective-flip = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+# Trust foundation
+pallet-identity = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }
+pallet-multisig = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha", default-features = false }

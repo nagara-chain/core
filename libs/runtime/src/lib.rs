@@ -15,6 +15,7 @@ pub mod grandpa;
 pub mod identity;
 pub mod multisig;
 pub mod opaque;
+pub mod servicer_registry;
 pub mod sudo;
 pub mod system;
 pub mod timestamp;
@@ -93,7 +94,7 @@ pub const VERSION: sp_version::RuntimeVersion = sp_version::RuntimeVersion {
     apis: crate::RUNTIME_API_VERSIONS,
     authoring_version: 3,
     impl_version: 4,
-    spec_version: 125,
+    spec_version: 126,
     state_version: 2,
     transaction_version: 7,
 };
@@ -145,6 +146,7 @@ frame_support::construct_runtime!(
         Assets: pallet_assets = 12,
         Multisig: pallet_multisig = 13,
         Identity: pallet_identity = 14,
+        ServicerRegistry: nagara_core_servicer_registry = 15,
     }
 );
 
