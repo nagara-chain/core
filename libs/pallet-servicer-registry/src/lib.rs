@@ -120,12 +120,12 @@ pub mod pallet {
         #[pallet::weight(Weight::from_parts(4_000_000, 3471) + T::DbWeight::get().writes(2) + T::DbWeight::get().reads(2))] // TODO: this is an estimation, please benchmark
         pub fn register_servicer(
             origin: OriginFor<T>,
-            block: BlockNumberFor<T>,
             owner: T::AccountId,
             peer_id: sp_core::OpaquePeerId,
             base_url: sp_std::vec::Vec<u8>,
         ) -> DispatchResultWithPostInfo {
             Self::ensure_ancient_brother(origin)?;
+            let block = <frame_system::Pallet<T>>::block_number();
             let minimum_identity_field = pallet_identity::IdentityField::Legal as u64;
             ensure!(
                 !Servicers::<T>::contains_key(&peer_id),
@@ -210,7 +210,7 @@ pub mod pallet {
             let owner_account = servicer_info.owner;
             AccountServicers::<T>::mutate(&owner_account, |servicers| {
                 let account_servicer_info = servicers.as_mut().unwrap();
-                let _ = account_servicer_info.reputations.saturating_add(1);
+                account_servicer_info.reputations = account_servicer_info.reputations.saturating_add(1);
             });
 
             Self::deposit_event(Event::<T>::ServiceReputationIncreased {
@@ -236,7 +236,7 @@ pub mod pallet {
             let owner_account = servicer_info.owner;
             AccountServicers::<T>::mutate(&owner_account, |servicers| {
                 let account_servicer_info = servicers.as_mut().unwrap();
-                let _ = account_servicer_info.reputations.saturating_sub(1);
+                account_servicer_info.reputations = account_servicer_info.reputations.saturating_sub(1);
             });
 
             Self::deposit_event(Event::<T>::ServiceReputationDecreased {
