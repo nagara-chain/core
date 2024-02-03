@@ -1,7 +1,8 @@
 use nagara_core_runtime::opaque::SessionKeys;
 use nagara_core_runtime::{
-    AccountId, AuraConfig, BalancesConfig, ContractsConfig, GrandpaConfig, RuntimeGenesisConfig,
-    SessionConfig, Signature, SudoConfig, SystemConfig, ValidatorSetConfig, WASM_BINARY,
+    AccountId, AuraConfig, BalancesConfig, BigBrotherCouncilConfig, ContractsConfig, GrandpaConfig,
+    RuntimeGenesisConfig, SessionConfig, Signature, SudoConfig, SystemConfig, ValidatorSetConfig,
+    WASM_BINARY,
 };
 use sc_service::ChainType;
 use sc_telemetry::TelemetryEndpoints;
@@ -165,7 +166,11 @@ fn testnet_genesis(
             ..Default::default()
         },
         balances: BalancesConfig {
-            balances: endowed_accounts.iter().cloned().map(|k| (k, 1 << 60)).collect(),
+            balances: endowed_accounts
+                .iter()
+                .cloned()
+                .map(|k| (k, 1 << 60))
+                .collect(),
         },
         validator_set: ValidatorSetConfig {
             initial_validators: initial_authorities
@@ -176,7 +181,13 @@ fn testnet_genesis(
         session: SessionConfig {
             keys: initial_authorities
                 .iter()
-                .map(|x| (x.0.clone(), x.0.clone(), session_keys(x.1.clone(), x.2.clone())))
+                .map(|x| {
+                    (
+                        x.0.clone(),
+                        x.0.clone(),
+                        session_keys(x.1.clone(), x.2.clone()),
+                    )
+                })
                 .collect::<Vec<_>>(),
         },
         aura: AuraConfig {
@@ -192,7 +203,11 @@ fn testnet_genesis(
         transaction_payment: Default::default(),
         assets: Default::default(),
         contracts: ContractsConfig {
-            contract_master: Some(root_key),
+            contract_master: Some(root_key.clone()),
+        },
+        big_brother_council: BigBrotherCouncilConfig {
+            elder: Some(root_key),
+            ..Default::default()
         },
     }
 }

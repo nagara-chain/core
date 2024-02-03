@@ -40,9 +40,9 @@ impl SubstrateCli for Cli {
             | "dev" => Box::new(chainspec::development_config()?),
             | "" | "testnet" => Box::new(chainspec::testnet_config()?),
             | path => {
-                Box::new(chainspec::ChainSpec::from_json_file(std::path::PathBuf::from(
-                    path,
-                ))?)
+                Box::new(chainspec::ChainSpec::from_json_file(
+                    std::path::PathBuf::from(path),
+                )?)
             },
         })
     }
@@ -133,8 +133,9 @@ pub fn run() -> sc_cli::Result<()> {
                 match cmd {
                     | BenchmarkCmd::Pallet(cmd) => {
                         if !cfg!(feature = "runtime-benchmarks") {
-                            return Err("Runtime benchmarking wasn't enabled when building the node. You \
-                                        can enable it with `--features runtime-benchmarks`."
+                            return Err("Runtime benchmarking wasn't enabled when building the \
+                                        node. You can enable it with `--features \
+                                        runtime-benchmarks`."
                                 .into());
                         }
 
@@ -148,10 +149,9 @@ pub fn run() -> sc_cli::Result<()> {
                     },
                     #[cfg(not(feature = "runtime-benchmarks"))]
                     | BenchmarkCmd::Storage(_) => {
-                        Err(
-                            "Storage benchmarking can be enabled with `--features runtime-benchmarks`."
-                                .into(),
-                        )
+                        Err("Storage benchmarking can be enabled with `--features \
+                             runtime-benchmarks`."
+                            .into())
                     },
                     #[cfg(feature = "runtime-benchmarks")]
                     | BenchmarkCmd::Storage(cmd) => {
@@ -195,7 +195,9 @@ pub fn run() -> sc_cli::Result<()> {
 
                         cmd.run(client, inherent_benchmark_data()?, Vec::new(), &ext_factory)
                     },
-                    | BenchmarkCmd::Machine(cmd) => cmd.run(&config, SUBSTRATE_REFERENCE_HARDWARE.clone()),
+                    | BenchmarkCmd::Machine(cmd) => {
+                        cmd.run(&config, SUBSTRATE_REFERENCE_HARDWARE.clone())
+                    },
                 }
             })
         },
@@ -204,8 +206,8 @@ pub fn run() -> sc_cli::Result<()> {
         #[cfg(not(feature = "try-runtime"))]
         | Some(Subcommand::TryRuntime) => {
             Err(
-                "TryRuntime wasn't enabled when building the node. You can enable it with `--features \
-                 try-runtime`."
+                "TryRuntime wasn't enabled when building the node. You can enable it with \
+                 `--features try-runtime`."
                     .into(),
             )
         },

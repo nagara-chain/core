@@ -1,5 +1,5 @@
 [package]
-name = "nagara-core-servicer-registry"
+name = "nagara-registry-servicers"
 description = "nagara Network - Servicer Registry Pallet"
 authors.workspace = true
 edition.workspace = true
@@ -12,8 +12,7 @@ version.workspace = true
 codec.workspace = true
 frame-support.workspace = true
 frame-system.workspace = true
-pallet-identity.workspace = true
-pallet-sudo.workspace = true
+nagara-council-bigbrothers.workspace = true
 scale-info.workspace = true
 sp-core.workspace = true
 sp-io.workspace = true
@@ -26,8 +25,7 @@ std = [
     "codec/std",
     "frame-support/std",
     "frame-system/std",
-    "pallet-identity/std",
-    "pallet-sudo/std",
+    "nagara-council-bigbrothers/std",
     "scale-info/std",
     "sp-core/std",
     "sp-io/std",

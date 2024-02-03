@@ -1,0 +1,36 @@
+[package]
+name = "nagara-council-bigbrothers"
+description = "nagara Network - Big Brother Council"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+codec.workspace = true
+frame-support.workspace = true
+frame-system.workspace = true
+pallet-identity.workspace = true
+scale-info.workspace = true
+sp-api.workspace = true
+sp-core.workspace = true
+sp-io.workspace = true
+sp-runtime.workspace = true
+sp-std.workspace = true
+
+[features]
+default = ["std"]
+std = [
+    "codec/std",
+    "frame-support/std",
+    "frame-system/std",
+    "pallet-identity/std",
+    "scale-info/std",
+    "sp-api/std",
+    "sp-core/std",
+    "sp-io/std",
+    "sp-runtime/std",
+    "sp-std/std",
+]

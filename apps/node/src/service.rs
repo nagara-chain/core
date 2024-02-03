@@ -54,7 +54,12 @@ pub fn new_partial(
         sc_consensus::DefaultImportQueue<Block, FullClient>,
         sc_transaction_pool::FullPool<Block, FullClient>,
         (
-            sc_consensus_grandpa::GrandpaBlockImport<FullBackend, Block, FullClient, FullSelectChain>,
+            sc_consensus_grandpa::GrandpaBlockImport<
+                FullBackend,
+                Block,
+                FullClient,
+                FullSelectChain,
+            >,
             sc_consensus_grandpa::LinkHalf<Block, FullClient, FullSelectChain>,
             Option<Telemetry>,
         ),
@@ -82,7 +87,9 @@ pub fn new_partial(
     let client = Arc::new(client);
 
     let telemetry = telemetry.map(|(worker, telemetry)| {
-        task_manager.spawn_handle().spawn("telemetry", None, worker.run());
+        task_manager
+            .spawn_handle()
+            .spawn("telemetry", None, worker.run());
         telemetry
     });
 
@@ -105,29 +112,31 @@ pub fn new_partial(
 
     let slot_duration = sc_consensus_aura::slot_duration(&*client)?;
 
-    let import_queue = sc_consensus_aura::import_queue::<AuraPair, _, _, _, _, _>(ImportQueueParams {
-        block_import: grandpa_block_import.clone(),
-        justification_import: Some(Box::new(grandpa_block_import.clone())),
-        client: client.clone(),
-        create_inherent_data_providers: move |_, ()| {
-            async move {
-                let timestamp = sp_timestamp::InherentDataProvider::from_system_time();
+    let import_queue = sc_consensus_aura::import_queue::<AuraPair, _, _, _, _, _>(
+        ImportQueueParams {
+            block_import: grandpa_block_import.clone(),
+            justification_import: Some(Box::new(grandpa_block_import.clone())),
+            client: client.clone(),
+            create_inherent_data_providers: move |_, ()| {
+                async move {
+                    let timestamp = sp_timestamp::InherentDataProvider::from_system_time();
 
-                let slot =
+                    let slot =
                     sp_consensus_aura::inherents::InherentDataProvider::from_timestamp_and_slot_duration(
                         *timestamp,
                         slot_duration,
                     );
 
-                Ok((slot, timestamp))
-            }
+                    Ok((slot, timestamp))
+                }
+            },
+            spawner: &task_manager.spawn_essential_handle(),
+            registry: config.prometheus_registry(),
+            check_for_equivocation: Default::default(),
+            telemetry: telemetry.as_ref().map(|x| x.handle()),
+            compatibility_mode: Default::default(),
         },
-        spawner: &task_manager.spawn_essential_handle(),
-        registry: config.prometheus_registry(),
-        check_for_equivocation: Default::default(),
-        telemetry: telemetry.as_ref().map(|x| x.handle()),
-        compatibility_mode: Default::default(),
-    })?;
+    )?;
 
     Ok(sc_service::PartialComponents {
         client,
@@ -195,7 +204,9 @@ pub fn new_full(config: Configuration) -> Result<TaskManager, ServiceError> {
                 is_validator: config.role.is_authority(),
                 keystore: Some(keystore_container.keystore()),
                 offchain_db: backend.offchain_storage(),
-                transaction_pool: Some(OffchainTransactionPoolFactory::new(transaction_pool.clone())),
+                transaction_pool: Some(OffchainTransactionPoolFactory::new(
+                    transaction_pool.clone(),
+                )),
                 network_provider: network.clone(),
                 enable_http_requests: true,
                 custom_extensions: |_| vec![],
@@ -252,8 +263,8 @@ pub fn new_full(config: Configuration) -> Result<TaskManager, ServiceError> {
 
         let slot_duration = sc_consensus_aura::slot_duration(&*client)?;
 
-        let aura =
-            sc_consensus_aura::start_aura::<AuraPair, _, _, _, _, _, _, _, _, _, _>(StartAuraParams {
+        let aura = sc_consensus_aura::start_aura::<AuraPair, _, _, _, _, _, _, _, _, _, _>(
+            StartAuraParams {
                 slot_duration,
                 client,
                 select_chain,
@@ -281,7 +292,8 @@ pub fn new_full(config: Configuration) -> Result<TaskManager, ServiceError> {
                 max_block_proposal_slot_portion: None,
                 telemetry: telemetry.as_ref().map(|x| x.handle()),
                 compatibility_mode: Default::default(),
-            })?;
+            },
+        )?;
 
         // the AURA authoring task is considered essential, i.e. if it
         // fails we take down the service with it.

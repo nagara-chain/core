@@ -15,7 +15,8 @@ codec.workspace = true
 scale-info.workspace = true
 
 # Locals
-nagara-core-servicer-registry.workspace = true
+nagara-council-bigbrothers.workspace = true
+nagara-registry-servicers.workspace = true
 
 # Base consensus & primitives
 frame-executive.workspace = true
@@ -81,7 +82,8 @@ std = [
     "frame-system-rpc-runtime-api/std",
     "frame-system/std",
     "frame-try-runtime?/std",
-    "nagara-core-servicer-registry/std",
+    "nagara-council-bigbrothers/std",
+    "nagara-registry-servicers/std",
     "pallet-assets/std",
     "pallet-aura/std",
     "pallet-balances/std",

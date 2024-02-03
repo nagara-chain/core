@@ -11,7 +11,12 @@ version = "1.0.24-alpha.1"
 
 [workspace]
 resolver = "2"
-members = ["apps/node", "libs/runtime", "libs/pallet-servicer-registry"]
+members = [
+    "apps/node",
+    "libs/runtime",
+    "libs/pallet-council-bigbrothers",
+    "libs/pallet-registry-servicers",
+]
 
 [patch.crates-io]
 ss58-registry = { git = "https://github.com/nagara-network/ss58-registry", rev = "0542581" }
@@ -19,7 +24,8 @@ ss58-registry = { git = "https://github.com/nagara-network/ss58-registry", rev =
 [workspace.dependencies]
 # Local
 nagara-core-runtime = { path = "libs/runtime" }
-nagara-core-servicer-registry = { path = "libs/pallet-servicer-registry", default-features = false }
+nagara-council-bigbrothers = { path = "libs/pallet-council-bigbrothers", default-features = false }
+nagara-registry-servicers = { path = "libs/pallet-registry-servicers", default-features = false }
 # Others
 codec = { package = "parity-scale-codec", version = "3.6.1", default-features = false, features = [
     "derive",

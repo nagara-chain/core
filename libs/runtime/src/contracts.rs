@@ -1,5 +1,7 @@
-pub const CONTRACTS_DEBUG_OUTPUT: pallet_contracts::DebugInfo = pallet_contracts::DebugInfo::UnsafeDebug;
-pub const CONTRACTS_EVENTS: pallet_contracts::CollectEvents = pallet_contracts::CollectEvents::UnsafeCollect;
+pub const CONTRACTS_DEBUG_OUTPUT: pallet_contracts::DebugInfo =
+    pallet_contracts::DebugInfo::UnsafeDebug;
+pub const CONTRACTS_EVENTS: pallet_contracts::CollectEvents =
+    pallet_contracts::CollectEvents::UnsafeCollect;
 
 impl pallet_insecure_randomness_collective_flip::Config for crate::Runtime {}
 

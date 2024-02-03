@@ -2,7 +2,8 @@ impl pallet_transaction_payment::Config for crate::Runtime {
     type FeeMultiplierUpdate = pallet_transaction_payment::ConstFeeMultiplier<crate::FeeMultiplier>;
     type LengthToFee = NormalizedLengthToFee<crate::Balance>;
     type OnChargeTransaction = pallet_transaction_payment::CurrencyAdapter<crate::Balances, ()>;
-    type OperationalFeeMultiplier = crate::ConstU8<{ crate::constants::OPERATIONAL_FEE_MULTIPLIER }>;
+    type OperationalFeeMultiplier =
+        crate::ConstU8<{ crate::constants::OPERATIONAL_FEE_MULTIPLIER }>;
     type RuntimeEvent = crate::RuntimeEvent;
     type WeightToFee = NormalizedWeightToFee<crate::Balance>;
 }
@@ -19,16 +20,25 @@ where
     type Balance = T;
 
     fn weight_to_fee(weight: &frame_support::weights::Weight) -> Self::Balance {
+        let nagara_council_bigbrothers::TransactionFeeInfo::<u128> {
+            weight_to_fee_divider,
+            weight_to_fee_multiplier,
+            minimum_transaction_fee,
+        } = crate::BigBrotherCouncil::tx_fee_info();
+
         let mut normalized_ref_time = (weight
             .ref_time()
-            .saturating_div(crate::constants::REF_TIME_GAS_FEE_DIVIDER))
+            .saturating_mul(weight_to_fee_multiplier)
+            .saturating_div(weight_to_fee_divider))
         .into();
 
-        if normalized_ref_time == 0 {
-            normalized_ref_time = crate::constants::MIN_GAS_FEE;
+        if normalized_ref_time < minimum_transaction_fee {
+            normalized_ref_time = minimum_transaction_fee;
         }
 
-        <Self::Balance as sp_arithmetic::traits::SaturatedConversion>::saturated_from(normalized_ref_time)
+        <Self::Balance as sp_arithmetic::traits::SaturatedConversion>::saturated_from(
+            normalized_ref_time,
+        )
     }
 }
 

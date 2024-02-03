@@ -3970,7 +3970,8 @@ dependencies = [
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
  "frame-try-runtime",
- "nagara-core-servicer-registry",
+ "nagara-council-bigbrothers",
+ "nagara-registry-servicers",
  "pallet-assets",
  "pallet-aura",
  "pallet-balances",
@@ -4008,13 +4009,28 @@ dependencies = [
 ]
 
 [[package]]
-name = "nagara-core-servicer-registry"
+name = "nagara-council-bigbrothers"
 version = "1.0.24-alpha.1"
 dependencies = [
  "frame-support",
  "frame-system",
  "pallet-identity",
- "pallet-sudo",
+ "parity-scale-codec",
+ "scale-info",
+ "sp-api",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-std",
+]
+
+[[package]]
+name = "nagara-registry-servicers"
+version = "1.0.24-alpha.1"
+dependencies = [
+ "frame-support",
+ "frame-system",
+ "nagara-council-bigbrothers",
  "parity-scale-codec",
  "scale-info",
  "sp-core",

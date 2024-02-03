@@ -1,6 +1,6 @@
 impl substrate_validator_set::Config for crate::Runtime {
     type AddRemoveOrigin = frame_system::EnsureRoot<crate::AccountId>;
-    type MinAuthorities = crate::ConstU32<{ crate::constants::MIN_AUTHORITIES }>;
+    type MinAuthorities = crate::ConstU32<{ crate::constants::MIN_AUTHORITIES as u32 }>;
     type RuntimeEvent = crate::RuntimeEvent;
     type WeightInfo = substrate_validator_set::weights::SubstrateWeight<crate::Runtime>;
 }
@@ -12,7 +12,8 @@ impl pallet_session::Config for crate::Runtime {
         crate::ConstU32<{ crate::constants::AUTHORITY_SESSION_OFFSET }>,
     >;
     type RuntimeEvent = crate::RuntimeEvent;
-    type SessionHandler = <crate::opaque::SessionKeys as sp_runtime::traits::OpaqueKeys>::KeyTypeIdProviders;
+    type SessionHandler =
+        <crate::opaque::SessionKeys as sp_runtime::traits::OpaqueKeys>::KeyTypeIdProviders;
     type SessionManager = crate::ValidatorSet;
     type ShouldEndSession = pallet_session::PeriodicSessions<
         crate::ConstU32<{ crate::constants::AUTHORITY_SESSION_PERIOD }>,

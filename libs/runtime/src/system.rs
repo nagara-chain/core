@@ -6,7 +6,7 @@ impl frame_system::Config for crate::Runtime {
     type BlockHashCount = crate::BlockHashCount;
     type BlockLength = crate::BlockLength;
     type BlockWeights = crate::BlockWeights;
-    type DbWeight = frame_support::weights::constants::ParityDbWeight;
+    type DbWeight = frame_support::weights::constants::RocksDbWeight;
     type Hash = crate::Hash;
     type Hashing = sp_runtime::traits::BlakeTwo256;
     type Lookup = sp_runtime::traits::AccountIdLookup<crate::AccountId, ()>;

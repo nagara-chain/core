@@ -4,11 +4,15 @@ pub const ALLOW_MULTIPLE_BLOCKS_PER_SLOT: bool = false;
 pub const AUTHORITY_SESSION_OFFSET: u32 = 0;
 pub const AUTHORITY_SESSION_PERIOD: u32 = 2 * MINUTES;
 pub const CONSENSUS_SLOT_DURATION: u64 = BLOCKTIME_MS;
-pub const MAX_AUTHORITIES: u32 = 16;
+pub const INITIAL_WEIGHT_TO_FEE_DIVIDER: u64 = 16 * 1024;
+pub const INITIAL_WEIGHT_TO_FEE_MULTIPLIER: u64 = 1;
+pub const INITIAL_MINIMUM_TRANSACTION_FEE: crate::Balance = get_fee(1, 1024);
+pub const MAX_AUTHORITIES: u8 = 16;
 pub const MAX_NOMINATORS: u32 = 0;
 pub const MAX_SET_ID_SESSION_ENTRIES: u64 = 0;
-pub const MIN_AUTHORITIES: u32 = 1;
+pub const MIN_AUTHORITIES: u8 = 1;
 pub const NORMAL_DISPATCH_RATIO: sp_runtime::Perbill = sp_runtime::Perbill::from_percent(90);
+pub const PROPOSAL_APPROVAL_PERCENT: sp_runtime::Percent = sp_runtime::Percent::from_percent(75);
 
 // endregion
 
@@ -32,6 +36,14 @@ pub const WEIGHT_TIME: u64 = 1;
 
 // region: accounts & balances const
 
+pub const CHAIN_BURN_ADDRESS: sp_core::crypto::AccountId32 = sp_core::crypto::AccountId32::new([
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+]);
+pub const CHAIN_MINT_ADDRESS: sp_core::crypto::AccountId32 = sp_core::crypto::AccountId32::new([
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+]);
 pub const DEPOSIT_PER_BYTE: crate::Balance = get_fee(0, 1);
 pub const DEPOSIT_PER_ITEM: crate::Balance = get_fee(1, 0);
 pub const ERC20_APPROVAL_DEPOSIT: crate::Balance = 32 * TOKEN;
@@ -45,8 +57,10 @@ pub const IDENTITY_BYTE_DEPOOSIT: crate::Balance = get_fee(0, 1);
 pub const IDENTITY_MAX_ADDITIONAL_FIELDS: u32 = 128;
 pub const IDENTITY_MAX_SUB_ACCOUNTS: u32 = 256;
 pub const IDENTITY_SUB_ACCOUNT_DEPOSIT: crate::Balance = 100 * TOKEN_CENTS;
-pub const MAX_ACCOUNT_LOCKS: u32 = 50;
-pub const MIN_GAS_FEE: crate::Balance = get_fee(1, 0);
+pub const MAX_ACCOUNT_FREEZES: u32 = 50;
+pub const MAX_ACCOUNT_HOLDS: u32 = MAX_ACCOUNT_FREEZES;
+pub const MAX_ACCOUNT_LOCKS: u32 = MAX_ACCOUNT_FREEZES;
+pub const MAX_ACCOUNT_RESERVES: u32 = MAX_ACCOUNT_FREEZES;
 pub const MULTISIG_DEPOSIT_BASE: crate::Balance = get_fee(1, MULTISIG_SIZE);
 pub const MULTISIG_DEPOSIT_FACTOR: crate::Balance = get_fee(0, MULTISIG_KEY_SIZE);
 pub const MULTISIG_EXT_SIZE: u32 = 4 + 4 + 16 + 32;
@@ -54,7 +68,6 @@ pub const MULTISIG_KEY_SIZE: u32 = 32;
 pub const MULTISIG_MAX_PARTICIPANTS: u32 = 32;
 pub const MULTISIG_SIZE: u32 = MULTISIG_KEY_SIZE + MULTISIG_EXT_SIZE;
 pub const OPERATIONAL_FEE_MULTIPLIER: u8 = 5;
-pub const REF_TIME_GAS_FEE_DIVIDER: u64 = 16 * 1024;
 pub const TOKEN_CENTS: crate::Balance = TOKEN / 100;
 pub const TOKEN_DIGIT: u32 = 9;
 pub const TOKEN_MICROS: crate::Balance = TOKEN_MILLIS / 1_000;
