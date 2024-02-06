@@ -133,6 +133,7 @@ pub mod pallet {
     // endregion
 
     // region: Custom, Event, and Errors type
+
     #[derive(Clone)]
     #[derive(codec::Decode, codec::Encode, codec::MaxEncodedLen)]
     #[derive(scale_info::TypeInfo)]
