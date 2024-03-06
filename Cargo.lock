@@ -3917,7 +3917,7 @@ dependencies = [
 
 [[package]]
 name = "nagara-core-node"
-version = "1.0.24-alpha.2"
+version = "1.0.24-alpha.4"
 dependencies = [
  "clap",
  "frame-benchmarking",
@@ -3961,7 +3961,7 @@ dependencies = [
 
 [[package]]
 name = "nagara-core-runtime"
-version = "1.0.24-alpha.2"
+version = "1.0.24-alpha.4"
 dependencies = [
  "frame-benchmarking",
  "frame-executive",
@@ -3971,6 +3971,7 @@ dependencies = [
  "frame-system-rpc-runtime-api",
  "frame-try-runtime",
  "nagara-council-bigbrothers",
+ "nagara-pda-files",
  "nagara-registry-servicers",
  "pallet-assets",
  "pallet-aura",
@@ -4010,7 +4011,7 @@ dependencies = [
 
 [[package]]
 name = "nagara-council-bigbrothers"
-version = "1.0.24-alpha.2"
+version = "1.0.24-alpha.4"
 dependencies = [
  "frame-support",
  "frame-system",
@@ -4025,8 +4026,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "nagara-pda-files"
+version = "1.0.24-alpha.4"
+dependencies = [
+ "frame-support",
+ "frame-system",
+ "nagara-council-bigbrothers",
+ "nagara-registry-servicers",
+ "parity-scale-codec",
+ "scale-info",
+ "sp-arithmetic",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-std",
+]
+
+[[package]]
 name = "nagara-registry-servicers"
-version = "1.0.24-alpha.2"
+version = "1.0.24-alpha.4"
 dependencies = [
  "frame-support",
  "frame-system",

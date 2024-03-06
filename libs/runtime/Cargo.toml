@@ -16,6 +16,7 @@ scale-info.workspace = true
 
 # Locals
 nagara-council-bigbrothers.workspace = true
+nagara-pda-files.workspace = true
 nagara-registry-servicers.workspace = true
 
 # Base consensus & primitives

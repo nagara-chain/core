@@ -55,7 +55,7 @@ where
 
     fn weight_to_fee(weight: &frame_support::weights::Weight) -> Self::Balance {
         let saturated_weight =
-            sp_arithmetic::traits::SaturatedConversion::saturated_into(weight.proof_size());
+            sp_arithmetic::traits::SaturatedConversion::saturated_into(weight.ref_time());
         let length_fee = crate::constants::get_fee(1, saturated_weight);
 
         <Self::Balance as sp_arithmetic::traits::SaturatedConversion>::saturated_from(length_fee)

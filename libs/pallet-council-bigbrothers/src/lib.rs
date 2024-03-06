@@ -296,9 +296,9 @@ pub mod pallet {
             }
 
             for (_, judgement) in account_judgements {
-                let has_bad_judgement = matches!(
+                let has_bad_judgement = !matches!(
                     judgement,
-                    pallet_identity::Judgement::Erroneous | pallet_identity::Judgement::Unknown
+                    pallet_identity::Judgement::Reasonable | pallet_identity::Judgement::KnownGood
                 );
 
                 if has_bad_judgement {

@@ -5,6 +5,8 @@ pub const ATTESTER_BINDING_HOLD: crate::Balance = 1 * TOKEN;
 pub const AUTHORITY_SESSION_OFFSET: u32 = 0;
 pub const AUTHORITY_SESSION_PERIOD: u32 = 2 * MINUTES;
 pub const CONSENSUS_SLOT_DURATION: u64 = BLOCKTIME_MS;
+pub const DOWNLOAD_FEE_DIVIDER: u32 = 1024;
+pub const DOWNLOAD_FEE_MINIMUM: u32 = 256;
 pub const INITIAL_MINIMUM_TRANSACTION_FEE: crate::Balance = get_fee(1, 1024);
 pub const INITIAL_WEIGHT_TO_FEE_DIVIDER: u64 = 16 * 1024;
 pub const INITIAL_WEIGHT_TO_FEE_MULTIPLIER: u64 = 1;
@@ -16,6 +18,11 @@ pub const MIN_AUTHORITIES: u8 = 1;
 pub const NORMAL_DISPATCH_RATIO: sp_runtime::Perbill = sp_runtime::Perbill::from_percent(90);
 pub const PROPOSAL_APPROVAL_PERCENT: sp_runtime::Percent = sp_runtime::Percent::from_percent(75);
 pub const SERVICER_REGISTRATION_FEE: crate::Balance = 5 * TOKEN;
+pub const STORAGE_FEE_DIVIDER: u32 = 16 * 1024;
+pub const STORAGE_FEE_MINIMUM: u32 = 256;
+pub const STORAGE_PERIOD: crate::BlockNumber = 1 * DAYS;
+pub const UPLOAD_FEE_DIVIDER: u32 = 10;
+pub const UPLOAD_FEE_MINIMUM: u32 = 16 * 1024;
 
 // endregion
 
@@ -96,6 +103,23 @@ pub const fn get_fee(items_count: u32, bytes_length: u32) -> crate::Balance {
     let byte_cost = bytes * TOKEN_PER_BYTE;
 
     item_cost + byte_cost
+}
+
+pub const fn get_fee_divided(
+    items_count: u32,
+    bytes_length: u32,
+    divider: u32,
+    minimum: u32,
+) -> crate::Balance {
+    let fee = get_fee(items_count, bytes_length);
+    let divider = if divider == 0 { 1 } else { divider as u128 };
+    let divided = fee / divider;
+
+    if divided == 0 {
+        minimum as u128
+    } else {
+        divided
+    }
 }
 
 // endregion

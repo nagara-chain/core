@@ -16,6 +16,7 @@ pub mod grandpa;
 pub mod identity;
 pub mod multisig;
 pub mod opaque;
+pub mod pda;
 pub mod registry_servicers;
 pub mod sudo;
 pub mod system;
@@ -86,7 +87,7 @@ pub use pallet_balances::Call as BalancesCall;
 pub use pallet_timestamp::Call as TimestampCall;
 #[cfg(any(feature = "std", test))]
 pub use sp_runtime::BuildStorage;
-pub use sp_runtime::{Perbill, Permill};
+pub use sp_runtime::{Perbill, Percent, Permill};
 
 use sp_std::prelude::*;
 
@@ -96,10 +97,10 @@ pub const VERSION: sp_version::RuntimeVersion = sp_version::RuntimeVersion {
     spec_name: sp_runtime::create_runtime_str!("nagara-core"),
     apis: crate::RUNTIME_API_VERSIONS,
     authoring_version: 3,
-    impl_version: 4,
-    spec_version: 140,
-    state_version: 3,
-    transaction_version: 7,
+    impl_version: 6,
+    spec_version: 150,
+    state_version: 8,
+    transaction_version: 8,
 };
 
 #[cfg(feature = "std")]
@@ -113,6 +114,7 @@ pub fn native_version() -> sp_version::NativeVersion {
 parameter_types! {
     pub const ApprovalDeposit: Balance = constants::ERC20_APPROVAL_DEPOSIT;
     pub const AssetDeposit: Balance = constants::ERC20_CREATION_DEPOSIT;
+    pub const BigBrotherDownloadFeeDistribution:  Percent = Percent::from_percent(20);
     pub const BlockHashCount: crate::BlockNumber = 2400;
     pub const ChainBurnAddress: sp_core::crypto::AccountId32 = constants::CHAIN_BURN_ADDRESS;
     pub const DepositBase: Balance = constants::MULTISIG_DEPOSIT_BASE;
@@ -120,6 +122,8 @@ parameter_types! {
     pub const MaxAdditionalFields: u32 = constants::IDENTITY_MAX_ADDITIONAL_FIELDS;
     pub const MetadataDepositBase: Balance = constants::ERC20_METADATA_DEPOSIT_PER_ITEM;
     pub const MetadataDepositPerByte: Balance = constants::ERC20_METADATA_DEPOSIT_PER_BYTE;
+    pub const RoyaltyFeeDistribution: Percent = Percent::from_percent(5);
+    pub const ServicerUploadFeeDistribution: Percent = Percent::from_percent(40);
     pub const SS58Prefix: u16 = ss58_registry::Ss58AddressFormatRegistry::NagaraAccount as u16;
     pub const StringLimit: u32 = constants::ERC20_STRING_LIMIT;
     pub const Version: sp_version::RuntimeVersion = crate::VERSION;
@@ -152,6 +156,7 @@ frame_support::construct_runtime!(
         Identity: pallet_identity = 14,
         BigBrotherCouncil: nagara_council_bigbrothers = 15,
         ServicerRegistry: nagara_registry_servicers = 16,
+        PDAFiles: nagara_pda_files = 17,
     }
 );
 
