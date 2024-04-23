@@ -145,6 +145,8 @@ pub mod pallet {
         FileAlreadyExist,
         /// Ownership transfer fee must greater than zero
         OwnershipTransferFeeMustNotZero,
+        /// Download fee is too low
+        DownloadFeeTooLow,
     }
 
     #[pallet::event]
@@ -391,6 +393,14 @@ pub mod pallet {
                 download_fee: args.download_fee,
                 size: args.size,
             };
+
+            if let Some(download_fee) = file_info.download_fee.as_ref() {
+                let min_download_fee = T::MinDownloadFeePerByte::bytes_to_fee(args.size);
+
+                if (*download_fee) < min_download_fee {
+                    return Err(<Error<T>>::DownloadFeeTooLow.into());
+                }
+            }
 
             let withdraw_reason = frame_support::traits::tokens::WithdrawReasons::FEE;
             let total_fee = T::UploadFeePerByte::bytes_to_fee(args.size);
