@@ -568,7 +568,7 @@ pub mod pallet {
             let beneficiary = ensure_signed(origin)?;
             Self::ownership_transfer(&file, beneficiary)?;
 
-            Ok(Pays::No.into())
+            Ok(Pays::Yes.into())
         }
     }
 
