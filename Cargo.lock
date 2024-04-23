@@ -3917,7 +3917,7 @@ dependencies = [
 
 [[package]]
 name = "nagara-core-node"
-version = "1.0.24-alpha.4"
+version = "1.0.24-alpha.5"
 dependencies = [
  "clap",
  "frame-benchmarking",
@@ -3961,7 +3961,7 @@ dependencies = [
 
 [[package]]
 name = "nagara-core-runtime"
-version = "1.0.24-alpha.4"
+version = "1.0.24-alpha.5"
 dependencies = [
  "frame-benchmarking",
  "frame-executive",
@@ -4011,7 +4011,7 @@ dependencies = [
 
 [[package]]
 name = "nagara-council-bigbrothers"
-version = "1.0.24-alpha.4"
+version = "1.0.24-alpha.5"
 dependencies = [
  "frame-support",
  "frame-system",
@@ -4027,7 +4027,7 @@ dependencies = [
 
 [[package]]
 name = "nagara-pda-files"
-version = "1.0.24-alpha.4"
+version = "1.0.24-alpha.5"
 dependencies = [
  "frame-support",
  "frame-system",
@@ -4044,7 +4044,7 @@ dependencies = [
 
 [[package]]
 name = "nagara-registry-servicers"
-version = "1.0.24-alpha.4"
+version = "1.0.24-alpha.5"
 dependencies = [
  "frame-support",
  "frame-system",

@@ -48,7 +48,7 @@ pub mod pallet {
         /// Upload fee per byte
         type UploadFeePerByte: FeeFromBytes<Balance = BalanceCurrencyTypeOf<Self>>;
         /// Download fee per byte
-        type DownloadFeePerByte: FeeFromBytes<Balance = BalanceCurrencyTypeOf<Self>>;
+        type MinDownloadFeePerByte: FeeFromBytes<Balance = BalanceCurrencyTypeOf<Self>>;
         /// Storage fee per byte per period
         type StorageFeePerBytePerPeriod: FeeFromBytes<Balance = BalanceCurrencyTypeOf<Self>>;
         /// Storage period
@@ -95,28 +95,44 @@ pub mod pallet {
     #[derive(Clone, Default, Eq, PartialEq)]
     #[derive(codec::Decode, codec::Encode, codec::MaxEncodedLen)]
     #[derive(sp_core::RuntimeDebug, scale_info::TypeInfo)]
-    pub struct FileInformation<AccountId, TransferFee> {
+    pub struct FileInformation<AccountId, FeeInToken>
+    where
+        FeeInToken: Clone + Copy,
+        AccountId: Clone, {
         pub hash: FileHash,
         pub uploader: AccountId,
         pub big_brother: AccountId,
         pub servicer: AccountId,
         pub owner: AccountId,
-        pub transfer_fee: TransferFee,
+        pub transfer_fee: FeeInToken,
+        pub download_fee: Option<FeeInToken>,
         pub size: u64,
-        pub free_for_all: bool,
+    }
+
+    impl<AccountId, FeeInToken> FileInformation<AccountId, FeeInToken>
+    where
+        FeeInToken: Clone + Copy,
+        AccountId: Clone,
+    {
+        pub fn is_ffa(&self) -> bool {
+            self.download_fee.is_none()
+        }
     }
 
     #[derive(Clone, Default, Eq, PartialEq)]
     #[derive(codec::Decode, codec::Encode, codec::MaxEncodedLen)]
     #[derive(sp_core::RuntimeDebug, scale_info::TypeInfo)]
-    pub struct FileInformationArgs<AccountId, TransferFee> {
+    pub struct FileInformationArgs<AccountId, FeeInToken>
+    where
+        FeeInToken: Clone + Copy,
+        AccountId: Clone, {
         pub hash: FileHash,
         pub uploader: AccountId,
         pub big_brother: AccountId,
         pub servicer: AccountId,
-        pub transfer_fee: TransferFee,
+        pub transfer_fee: FeeInToken,
+        pub download_fee: Option<FeeInToken>,
         pub size: u64,
-        pub free_for_all: bool,
     }
 
     #[pallet::error]
@@ -372,8 +388,8 @@ pub mod pallet {
                 servicer: args.servicer.clone(),
                 owner: args.uploader.clone(),
                 transfer_fee: args.transfer_fee,
+                download_fee: args.download_fee,
                 size: args.size,
-                free_for_all: args.free_for_all,
             };
 
             let withdraw_reason = frame_support::traits::tokens::WithdrawReasons::FEE;
@@ -425,40 +441,41 @@ pub mod pallet {
                 return Err(<Error<T>>::FileNotFound.into());
             }
 
-            let FileInformation {
-                big_brother,
-                servicer,
-                size,
-                owner,
-                free_for_all,
-                ..
-            } = Self::files(file).unwrap();
+            let the_file = Self::files(file).unwrap();
 
-            if free_for_all {
+            if the_file.is_ffa() {
                 return Ok(());
             }
 
+            let FileInformation {
+                big_brother,
+                servicer,
+                owner,
+                download_fee,
+                ..
+            } = the_file;
+
+            let download_fee = download_fee.unwrap();
             let withdraw_reason = frame_support::traits::tokens::WithdrawReasons::FEE;
             let divider =
                 <BalanceCurrencyTypeOf<T> as sp_runtime::traits::SaturatedConversion>::saturated_from(2u32);
-            let total_fee = T::DownloadFeePerByte::bytes_to_fee(size);
             let bb_part = T::BigBrotherDownloadFeeDistribution::get();
-            let bb_part_amount = bb_part.mul_floor(total_fee);
-            let owner_part_amount = total_fee - bb_part_amount;
+            let bb_part_amount = bb_part.mul_floor(download_fee);
+            let owner_part_amount = download_fee - bb_part_amount;
             let half_bb_fee =
                 sp_runtime::traits::CheckedDiv::checked_div(&bb_part_amount, &divider).unwrap();
             let _ = <<T as Config>::Currency as frame_support::traits::Currency<
                 T::AccountId,
             >>::withdraw(
                 downloader,
-                total_fee,
+                download_fee,
                 withdraw_reason,
                 frame_support::traits::tokens::ExistenceRequirement::KeepAlive,
             )?;
             Self::deposit_event(Event::DownloadFeePaid {
                 by: downloader.clone(),
                 file: file.clone(),
-                amount: total_fee,
+                amount: download_fee,
             });
             let _ = <<T as Config>::Currency as frame_support::traits::Currency<T::AccountId>>::deposit_creating(&owner, owner_part_amount);
             Self::deposit_event(Event::DownloadFeeDistributed {
@@ -498,7 +515,7 @@ pub mod pallet {
             file: T::AccountId,
             args: FileInformationArgs<T::AccountId, BalanceCurrencyTypeOf<T>>,
         ) -> DispatchResultWithPostInfo {
-            ensure_signed_or_root(origin)?;
+            ngr_bbcm::Pallet::<T>::ensure_council_member_or_root(origin)?;
             Self::upload_file(file, args)?;
 
             Ok(Pays::No.into())
@@ -512,7 +529,7 @@ pub mod pallet {
             file: T::AccountId,
             downloader: T::AccountId,
         ) -> DispatchResultWithPostInfo {
-            ensure_signed_or_root(origin)?;
+            ngr_bbcm::Pallet::<T>::ensure_council_member_or_root(origin)?;
             Self::download_file(&file, &downloader)?;
 
             Ok(Pays::No.into())
@@ -525,7 +542,7 @@ pub mod pallet {
             origin: OriginFor<T>,
             file: T::AccountId,
         ) -> DispatchResultWithPostInfo {
-            ensure_signed_or_root(origin)?;
+            ngr_bbcm::Pallet::<T>::ensure_council_member_or_root(origin)?;
             Self::distribute_storage_fee(&file)?;
 
             Ok(Pays::No.into())

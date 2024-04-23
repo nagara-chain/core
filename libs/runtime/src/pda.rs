@@ -1,7 +1,7 @@
 impl nagara_pda_files::Config for crate::Runtime {
     type BigBrotherDownloadFeeDistribution = crate::BigBrotherDownloadFeeDistribution;
     type Currency = crate::Balances;
-    type DownloadFeePerByte = DownloadFeePerByte<crate::Balance>;
+    type MinDownloadFeePerByte = MinDownloadFeePerByte<crate::Balance>;
     type RoyaltyFeeDistribution = crate::RoyaltyFeeDistribution;
     type RuntimeEvent = crate::RuntimeEvent;
     type ServicerUploadFeeDistribution = crate::ServicerUploadFeeDistribution;
@@ -10,11 +10,11 @@ impl nagara_pda_files::Config for crate::Runtime {
     type UploadFeePerByte = UploadFeePerByte<crate::Balance>;
 }
 
-pub struct DownloadFeePerByte<T>(sp_std::marker::PhantomData<T>);
+pub struct MinDownloadFeePerByte<T>(sp_std::marker::PhantomData<T>);
 pub struct StorageFeePerBytePerPeriod<T>(sp_std::marker::PhantomData<T>);
 pub struct UploadFeePerByte<T>(sp_std::marker::PhantomData<T>);
 
-impl<T> nagara_pda_files::FeeFromBytes for DownloadFeePerByte<T>
+impl<T> nagara_pda_files::FeeFromBytes for MinDownloadFeePerByte<T>
 where
     T: sp_arithmetic::traits::BaseArithmetic
         + core::convert::From<u64>

@@ -7,17 +7,17 @@ edition = "2021"
 license = "MIT"
 publish = false
 repository = "https://github.com/nagara-network/core"
-version = "1.0.24-alpha.4"
+version = "1.0.24-alpha.5"
 
 [workspace]
-resolver = "2"
 members = [
     "apps/node",
-    "libs/runtime",
     "libs/pallet-council-bigbrothers",
     "libs/pallet-pda-files",
     "libs/pallet-registry-servicers",
+    "libs/runtime",
 ]
+resolver = "2"
 
 [patch.crates-io]
 ss58-registry = { git = "https://github.com/nagara-network/ss58-registry", rev = "0542581" }
