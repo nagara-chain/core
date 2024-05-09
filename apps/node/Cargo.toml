@@ -1,10 +1,10 @@
 [package]
-name = "nagara-core-node"
-description = "nagara Network - Core Network (Blockchain) Node"
-build = "build.rs"
 authors.workspace = true
+build = "build.rs"
+description = "nagara Network - Core Network (Blockchain) Node"
 edition.workspace = true
 license.workspace = true
+name = "nagara-core-node"
 publish.workspace = true
 repository.workspace = true
 version.workspace = true
@@ -43,7 +43,7 @@ sp-timestamp = { git = "https://github.com/nagara-network/substrate.git", branch
 ss58-registry = { workspace = true, default-features = true }
 
 # These dependencies are used for the node template's RPCs
-jsonrpsee = { version = "0.16.2", features = ["server"] }
+jsonrpsee = { version = "0.16.3", features = ["server"] }
 pallet-transaction-payment-rpc = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha" }
 sc-basic-authorship = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha" }
 sc-rpc-api = { git = "https://github.com/nagara-network/substrate.git", branch = "nagara-network-v1.0.0-alpha" }

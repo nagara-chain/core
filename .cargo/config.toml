@@ -1,6 +1,6 @@
 [env]
-CC = "clang-17"  # for C/C++ deps
-CXX = "clang-17" # for C/C++ deps
+CC = "clang-18"  # for C/C++ deps
+CXX = "clang-18" # for C/C++ deps
 
 [profile.dev]
 codegen-units = 16

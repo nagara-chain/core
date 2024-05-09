@@ -15,7 +15,7 @@ pub const MAX_SET_ID_SESSION_ENTRIES: u64 = 0;
 pub const MIN_AUTHORITIES: u8 = 1;
 pub const NORMAL_DISPATCH_RATIO: sp_runtime::Perbill = sp_runtime::Perbill::from_percent(90);
 pub const PROPOSAL_APPROVAL_PERCENT: sp_runtime::Percent = sp_runtime::Percent::from_percent(75);
-pub const SERVICER_REGISTRATION_FEE: crate::Balance = 5 * TOKEN;
+pub const SERVICER_REGISTRATION_FEE: crate::Balance = 4 * TOKEN;
 pub const STORAGE_PERIOD: crate::BlockNumber = 1 * DAYS;
 
 // endregion

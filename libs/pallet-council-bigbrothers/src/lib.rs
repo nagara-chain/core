@@ -9,6 +9,8 @@ pub type BalanceTypeOf<T> = <<T as Config>::Currency as frame_support::traits::f
 
 pub const PALLET_IDENTIFICATION: frame_support::PalletId = frame_support::PalletId(*b"ngr/bbcm");
 
+/// This is a super pallet used by Sudo, Elders, and Big Brothers for
+/// minting/burning, and adjusting the gas fee of the network
 #[frame_support::pallet]
 pub mod pallet {
     use super::*;

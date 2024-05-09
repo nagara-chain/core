@@ -25,6 +25,8 @@ pub trait FeeFromBytes {
     fn bytes_to_fee(size: u64) -> Self::Balance;
 }
 
+/// This pallet is used as a hook for the Big Brother service's to keep & serve
+/// files
 #[frame_support::pallet]
 pub mod pallet {
     use super::*;

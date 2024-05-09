@@ -14,6 +14,8 @@ pub type UniqueMap<K, V> = sp_std::collections::btree_map::BTreeMap<K, V>;
 
 pub const PALLET_IDENTIFICATION: frame_support::PalletId = frame_support::PalletId(*b"ngr/svrg");
 
+/// This pallet is used for registrations of the servicers, including their
+/// reputations
 #[frame_support::pallet]
 pub mod pallet {
     use super::*;
