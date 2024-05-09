@@ -224,7 +224,7 @@ pub mod pallet {
                 hash, ..
             } = Self::files(file).unwrap();
             <Files<T>>::remove(file);
-            <Hashes<T>>::remove(&hash);
+            <Hashes<T>>::remove(hash);
 
             Self::deposit_event(Event::InsufficientAmountForKeepingFile {
                 file: file.clone(),
@@ -233,7 +233,10 @@ pub mod pallet {
             Ok(())
         }
 
-        fn distribute_storage_fee(file: &T::AccountId) -> Result<(), sp_runtime::DispatchError> {
+        fn distribute_storage_fee(
+            file: &T::AccountId,
+            spread: bool,
+        ) -> Result<(), sp_runtime::DispatchError> {
             if !<Files<T>>::contains_key(file) {
                 return Err(<Error<T>>::FileNotFound.into());
             }
@@ -246,10 +249,6 @@ pub mod pallet {
             } = Self::files(file).unwrap();
             let withdraw_reason = frame_support::traits::tokens::WithdrawReasons::FEE;
             let total_fee = T::StorageFeePerBytePerPeriod::bytes_to_fee(size);
-            let divider =
-                <BalanceCurrencyTypeOf<T> as sp_runtime::traits::SaturatedConversion>::saturated_from(2u32);
-            let half_fee =
-                sp_runtime::traits::CheckedDiv::checked_div(&total_fee, &divider).unwrap();
             let maybe_success = <<T as Config>::Currency as frame_support::traits::Currency<
                 T::AccountId,
             >>::withdraw(
@@ -259,29 +258,49 @@ pub mod pallet {
                 frame_support::traits::tokens::ExistenceRequirement::KeepAlive,
             );
 
+            Self::deposit_event(Event::StorageFeePaid {
+                file: file.clone(),
+                amount: total_fee,
+            });
+
             if maybe_success.is_err() {
                 Self::delete_file(file)?;
 
                 return Ok(());
             }
 
-            Self::deposit_event(Event::StorageFeePaid {
-                file: file.clone(),
-                amount: total_fee,
-            });
+            if spread {
+                let divider =
+                <BalanceCurrencyTypeOf<T> as sp_runtime::traits::SaturatedConversion>::saturated_from(2u32);
+                let half_fee =
+                    sp_runtime::traits::CheckedDiv::checked_div(&total_fee, &divider).unwrap();
 
-            let _ = <<T as Config>::Currency as frame_support::traits::Currency<T::AccountId>>::deposit_creating(&big_brother, half_fee);
-            Self::deposit_event(Event::StorageFeeDistributed {
-                file: file.clone(),
-                to: big_brother,
-                amount: half_fee,
-            });
-            let _ = <<T as Config>::Currency as frame_support::traits::Currency<T::AccountId>>::deposit_creating(&servicer, half_fee);
-            Self::deposit_event(Event::StorageFeeDistributed {
-                file: file.clone(),
-                to: servicer,
-                amount: half_fee,
-            });
+                let _ = <<T as Config>::Currency as frame_support::traits::Currency<
+                    T::AccountId,
+                >>::deposit_creating(&big_brother, half_fee);
+                Self::deposit_event(Event::StorageFeeDistributed {
+                    file: file.clone(),
+                    to: big_brother,
+                    amount: half_fee,
+                });
+                let _ = <<T as Config>::Currency as frame_support::traits::Currency<
+                    T::AccountId,
+                >>::deposit_creating(&servicer, half_fee);
+                Self::deposit_event(Event::StorageFeeDistributed {
+                    file: file.clone(),
+                    to: servicer,
+                    amount: half_fee,
+                });
+            } else {
+                let _ = <<T as Config>::Currency as frame_support::traits::Currency<
+                    T::AccountId,
+                >>::deposit_creating(&big_brother, total_fee);
+                Self::deposit_event(Event::StorageFeeDistributed {
+                    file: file.clone(),
+                    to: big_brother,
+                    amount: total_fee,
+                });
+            }
 
             Ok(())
         }
@@ -312,7 +331,7 @@ pub mod pallet {
                 sp_runtime::traits::CheckedDiv::checked_div(&royalty_part_amount, &divider)
                     .unwrap();
 
-            <Files<T>>::try_mutate(&file, |mutable_file| {
+            <Files<T>>::try_mutate(file, |mutable_file| {
                 let _ = <<T as Config>::Currency as frame_support::traits::Currency<
                     T::AccountId,
                 >>::withdraw(
@@ -373,7 +392,7 @@ pub mod pallet {
                 return Err(<Error<T>>::FileAlreadyExist.into());
             }
 
-            if <Hashes<T>>::contains_key(&args.hash) {
+            if <Hashes<T>>::contains_key(args.hash) {
                 return Err(<Error<T>>::FileAlreadyExist.into());
             }
 
@@ -384,7 +403,7 @@ pub mod pallet {
             }
 
             let file_info = FileInformation {
-                hash: args.hash.clone(),
+                hash: args.hash,
                 uploader: args.uploader.clone(),
                 big_brother: args.big_brother.clone(),
                 servicer: args.servicer.clone(),
@@ -551,9 +570,10 @@ pub mod pallet {
         pub fn servicer_take_storage_fee(
             origin: OriginFor<T>,
             file: T::AccountId,
+            spread: bool,
         ) -> DispatchResultWithPostInfo {
             ngr_bbcm::Pallet::<T>::ensure_council_member_or_root(origin)?;
-            Self::distribute_storage_fee(&file)?;
+            Self::distribute_storage_fee(&file, spread)?;
 
             Ok(Pays::No.into())
         }

@@ -5,8 +5,6 @@ pub const ATTESTER_BINDING_HOLD: crate::Balance = 1 * TOKEN;
 pub const AUTHORITY_SESSION_OFFSET: u32 = 0;
 pub const AUTHORITY_SESSION_PERIOD: u32 = 2 * MINUTES;
 pub const CONSENSUS_SLOT_DURATION: u64 = BLOCKTIME_MS;
-pub const DOWNLOAD_FEE_DIVIDER: u32 = 1024;
-pub const DOWNLOAD_FEE_MINIMUM: u32 = 256;
 pub const INITIAL_MINIMUM_TRANSACTION_FEE: crate::Balance = get_fee(1, 1024);
 pub const INITIAL_WEIGHT_TO_FEE_DIVIDER: u64 = 16 * 1024;
 pub const INITIAL_WEIGHT_TO_FEE_MULTIPLIER: u64 = 1;
@@ -18,11 +16,7 @@ pub const MIN_AUTHORITIES: u8 = 1;
 pub const NORMAL_DISPATCH_RATIO: sp_runtime::Perbill = sp_runtime::Perbill::from_percent(90);
 pub const PROPOSAL_APPROVAL_PERCENT: sp_runtime::Percent = sp_runtime::Percent::from_percent(75);
 pub const SERVICER_REGISTRATION_FEE: crate::Balance = 5 * TOKEN;
-pub const STORAGE_FEE_DIVIDER: u32 = 16 * 1024;
-pub const STORAGE_FEE_MINIMUM: u32 = 256;
 pub const STORAGE_PERIOD: crate::BlockNumber = 1 * DAYS;
-pub const UPLOAD_FEE_DIVIDER: u32 = 10;
-pub const UPLOAD_FEE_MINIMUM: u32 = 16 * 1024;
 
 // endregion
 
@@ -49,10 +43,6 @@ pub const WEIGHT_TIME: u64 = 1;
 pub const CHAIN_BURN_ADDRESS: sp_core::crypto::AccountId32 = sp_core::crypto::AccountId32::new([
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-]);
-pub const CHAIN_MINT_ADDRESS: sp_core::crypto::AccountId32 = sp_core::crypto::AccountId32::new([
-    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
 ]);
 pub const DEPOSIT_PER_BYTE: crate::Balance = get_fee(0, 1);
 pub const DEPOSIT_PER_ITEM: crate::Balance = get_fee(1, 0);
@@ -92,6 +82,48 @@ pub const TRANSACTION_BYTE_FEE: crate::Balance = get_fee(0, 1);
 // endregion
 
 // region: helper functions (const)
+
+pub const fn get_storage_fee_per_period(bytes_length: u64) -> crate::Balance {
+    const FEE_MIN: crate::Balance = 1;
+    const FEE_PER_MB: crate::Balance = 128 * 1024;
+    const MEGABYTE: u128 = 1_024 * 1_024;
+
+    let fee = (bytes_length as u128 * FEE_PER_MB) / MEGABYTE;
+
+    if fee < FEE_MIN {
+        FEE_MIN
+    } else {
+        fee
+    }
+}
+
+pub const fn get_retrieval_fee(bytes_length: u64) -> crate::Balance {
+    const FEE_MIN: crate::Balance = 1;
+    const FEE_PER_MB: crate::Balance = 4_096;
+    const MEGABYTE: u128 = 1_024 * 1_024;
+
+    let fee = (bytes_length as u128 * FEE_PER_MB) / MEGABYTE;
+
+    if fee < FEE_MIN {
+        FEE_MIN
+    } else {
+        fee
+    }
+}
+
+pub const fn get_upload_fee(bytes_length: u64) -> crate::Balance {
+    const FEE_MIN: crate::Balance = 1;
+    const FEE_PER_MB: crate::Balance = 1024;
+    const MEGABYTE: u128 = 1_024 * 1_024;
+
+    let fee = (bytes_length as u128 * FEE_PER_MB) / MEGABYTE;
+
+    if fee < FEE_MIN {
+        FEE_MIN
+    } else {
+        fee
+    }
+}
 
 pub const fn get_fee(items_count: u32, bytes_length: u32) -> crate::Balance {
     const TOKEN_PER_BYTE: crate::Balance = 14 * TOKEN_NANOS;

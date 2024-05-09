@@ -1,3 +1,4 @@
+#![allow(clippy::identity_op)]
 #![cfg_attr(not(feature = "std"), no_std)]
 // `construct_runtime!` does a lot of recursion and requires us to increase the limit to 512.
 #![recursion_limit = "512"]
@@ -98,7 +99,7 @@ pub const VERSION: sp_version::RuntimeVersion = sp_version::RuntimeVersion {
     apis: crate::RUNTIME_API_VERSIONS,
     authoring_version: 3,
     impl_version: 6,
-    spec_version: 151,
+    spec_version: 153,
     state_version: 8,
     transaction_version: 8,
 };

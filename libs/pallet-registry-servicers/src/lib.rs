@@ -264,7 +264,7 @@ pub mod pallet {
                 serial_number,
             } = supply_args;
 
-            if <Attesters<T>>::contains_key(&id) {
+            if <Attesters<T>>::contains_key(id) {
                 return Err(<Error<T>>::AttesterAlreadySupplied.into());
             }
 
@@ -275,7 +275,7 @@ pub mod pallet {
                 serial_number,
             };
             let event = Event::BigBrotherAttesterSupplied {
-                id: id.clone(),
+                id,
                 bb: big_brother,
             };
             <Attesters<T>>::insert(id, new_attester);
@@ -291,7 +291,7 @@ pub mod pallet {
                 return Err(<Error<T>>::AttesterDoesntExist.into());
             }
 
-            let attester = Self::attesters(&attester_id).unwrap();
+            let attester = Self::attesters(attester_id).unwrap();
 
             if attester.is_binded() {
                 return Err(<Error<T>>::AttesterAlreadyBinded.into());
@@ -301,7 +301,7 @@ pub mod pallet {
                 return Err(<Error<T>>::RestrictedCall.into());
             }
 
-            <Attesters<T>>::remove(&attester_id);
+            <Attesters<T>>::remove(attester_id);
             let event = Event::BigBrotherAttesterRecalled {
                 bb: caller,
                 id: attester_id,
@@ -363,7 +363,7 @@ pub mod pallet {
                 });
             }
 
-            <Servicers<T>>::try_mutate(&who, |mutable_servicer| {
+            <Servicers<T>>::try_mutate(who, |mutable_servicer| {
                 let mutable_servicer = mutable_servicer.get_or_insert(ServicerInformation {
                     rep_positive: 0,
                     rep_negative: 0,
@@ -386,7 +386,7 @@ pub mod pallet {
                 return Err(<Error<T>>::AttesterDoesntExist.into());
             }
 
-            let attester = Self::attesters(&attester_id).unwrap();
+            let attester = Self::attesters(attester_id).unwrap();
 
             if attester.is_binded() {
                 return Err(<Error<T>>::AttesterAlreadyBinded.into());
@@ -394,13 +394,9 @@ pub mod pallet {
 
             let mut events = sp_std::vec![];
 
-            <Attesters<T>>::try_mutate(&attester_id, |mutable_attester| {
+            <Attesters<T>>::try_mutate(attester_id, |mutable_attester| {
                 events.push(Self::try_hold_balance(&binder)?);
-                let result = Self::try_insert_attester_into_servicer(
-                    &binder,
-                    peer_id.clone(),
-                    attester_id.clone(),
-                );
+                let result = Self::try_insert_attester_into_servicer(&binder, peer_id, attester_id);
 
                 match result {
                     | Err(err) => {
@@ -532,10 +528,10 @@ pub mod pallet {
         pub fn md_rep_increase(origin: OriginFor<T>, on: AttesterId) -> DispatchResultWithPostInfo {
             let by = Self::ensure_and_get_signed_mediator(origin)?;
             ensure!(
-                <Attesters<T>>::contains_key(&on),
+                <Attesters<T>>::contains_key(on),
                 <Error<T>>::AttesterDoesntExist,
             );
-            let attester = <Attesters<T>>::get(&on).unwrap();
+            let attester = <Attesters<T>>::get(on).unwrap();
             ensure!(attester.binder.is_some(), <Error<T>>::AttesterIsUnbinded);
             let who = attester.binder.unwrap();
             <Servicers<T>>::mutate(&who, |servicers_mut| {
@@ -556,10 +552,10 @@ pub mod pallet {
         pub fn md_rep_decrease(origin: OriginFor<T>, on: AttesterId) -> DispatchResultWithPostInfo {
             let by = Self::ensure_and_get_signed_mediator(origin)?;
             ensure!(
-                <Attesters<T>>::contains_key(&on),
+                <Attesters<T>>::contains_key(on),
                 <Error<T>>::AttesterDoesntExist,
             );
-            let attester = <Attesters<T>>::get(&on).unwrap();
+            let attester = <Attesters<T>>::get(on).unwrap();
             ensure!(attester.binder.is_some(), <Error<T>>::AttesterIsUnbinded);
             let who = attester.binder.unwrap();
             <Servicers<T>>::mutate(&who, |servicers_mut| {

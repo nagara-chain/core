@@ -25,13 +25,7 @@ where
     type Balance = T;
 
     fn bytes_to_fee(size: u64) -> Self::Balance {
-        let size = <u32 as sp_arithmetic::traits::SaturatedConversion>::saturated_from(size);
-        let fee = crate::constants::get_fee_divided(
-            1,
-            size,
-            crate::constants::DOWNLOAD_FEE_DIVIDER,
-            crate::constants::DOWNLOAD_FEE_MINIMUM,
-        );
+        let fee = crate::constants::get_retrieval_fee(size);
 
         <Self::Balance as sp_arithmetic::traits::SaturatedConversion>::saturated_from(fee)
     }
@@ -48,13 +42,7 @@ where
     type Balance = T;
 
     fn bytes_to_fee(size: u64) -> Self::Balance {
-        let size = <u32 as sp_arithmetic::traits::SaturatedConversion>::saturated_from(size);
-        let fee = crate::constants::get_fee_divided(
-            1,
-            size,
-            crate::constants::STORAGE_FEE_DIVIDER,
-            crate::constants::STORAGE_FEE_MINIMUM,
-        );
+        let fee = crate::constants::get_storage_fee_per_period(size);
 
         <Self::Balance as sp_arithmetic::traits::SaturatedConversion>::saturated_from(fee)
     }
@@ -71,13 +59,7 @@ where
     type Balance = T;
 
     fn bytes_to_fee(size: u64) -> Self::Balance {
-        let size = <u32 as sp_arithmetic::traits::SaturatedConversion>::saturated_from(size);
-        let fee = crate::constants::get_fee_divided(
-            1,
-            size,
-            crate::constants::UPLOAD_FEE_DIVIDER,
-            crate::constants::UPLOAD_FEE_MINIMUM,
-        );
+        let fee = crate::constants::get_upload_fee(size);
 
         <Self::Balance as sp_arithmetic::traits::SaturatedConversion>::saturated_from(fee)
     }

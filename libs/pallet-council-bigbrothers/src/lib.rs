@@ -276,7 +276,7 @@ pub mod pallet {
         ) -> Result<(), sp_runtime::DispatchError> {
             let minimum_identity_field = pallet_identity::IdentityField::Legal as u64;
             ensure!(
-                pallet_identity::Pallet::<T>::has_identity(&account, minimum_identity_field),
+                pallet_identity::Pallet::<T>::has_identity(account, minimum_identity_field),
                 <Error<T>>::AccountHasNoLegalName,
             );
 
@@ -288,7 +288,7 @@ pub mod pallet {
             account: &T::AccountId,
         ) -> Result<(), sp_runtime::DispatchError> {
             Self::ensure_account_has_legal_field(account)?;
-            let account_registration = pallet_identity::Pallet::<T>::identity(&account).unwrap();
+            let account_registration = pallet_identity::Pallet::<T>::identity(account).unwrap();
             let account_judgements = &account_registration.judgements;
 
             if account_judgements.is_empty() {
@@ -469,7 +469,7 @@ pub mod pallet {
                 },
             };
             events.push(Event::TxFeeParametersChangeProposed {
-                proposal: new_proposal.new_parameters.clone(),
+                proposal: new_proposal.new_parameters,
                 by: proposer,
             });
             <CurrentProposal<T>>::set(Some(new_proposal));
