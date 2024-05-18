@@ -426,6 +426,52 @@ pub mod pallet {
 
             Ok(events)
         }
+
+        pub fn rep_increase_by_attester_id(
+            by: T::AccountId,
+            on: AttesterId,
+        ) -> Result<(), sp_runtime::DispatchError> {
+            ensure!(
+                <Attesters<T>>::contains_key(on),
+                <Error<T>>::AttesterDoesntExist,
+            );
+            let attester = <Attesters<T>>::get(on).unwrap();
+            ensure!(attester.binder.is_some(), <Error<T>>::AttesterIsUnbinded);
+            let who = attester.binder.unwrap();
+            <Servicers<T>>::mutate(&who, |servicers_mut| {
+                servicers_mut.as_mut().unwrap().increase_reputation()
+            });
+            Self::deposit_event(Event::ServicerReputationIncreased {
+                who,
+                on,
+                by,
+            });
+
+            Ok(())
+        }
+
+        pub fn rep_decrease_by_attester_id(
+            by: T::AccountId,
+            on: AttesterId,
+        ) -> Result<(), sp_runtime::DispatchError> {
+            ensure!(
+                <Attesters<T>>::contains_key(on),
+                <Error<T>>::AttesterDoesntExist,
+            );
+            let attester = <Attesters<T>>::get(on).unwrap();
+            ensure!(attester.binder.is_some(), <Error<T>>::AttesterIsUnbinded);
+            let who = attester.binder.unwrap();
+            <Servicers<T>>::mutate(&who, |servicers_mut| {
+                servicers_mut.as_mut().unwrap().decrease_reputation()
+            });
+            Self::deposit_event(Event::ServicerReputationDecreased {
+                who,
+                on,
+                by,
+            });
+
+            Ok(())
+        }
     }
 
     // endregion
@@ -529,21 +575,7 @@ pub mod pallet {
         #[pallet::weight(Weight::from_parts(0, 8192))] // TODO: please benchmark
         pub fn md_rep_increase(origin: OriginFor<T>, on: AttesterId) -> DispatchResultWithPostInfo {
             let by = Self::ensure_and_get_signed_mediator(origin)?;
-            ensure!(
-                <Attesters<T>>::contains_key(on),
-                <Error<T>>::AttesterDoesntExist,
-            );
-            let attester = <Attesters<T>>::get(on).unwrap();
-            ensure!(attester.binder.is_some(), <Error<T>>::AttesterIsUnbinded);
-            let who = attester.binder.unwrap();
-            <Servicers<T>>::mutate(&who, |servicers_mut| {
-                servicers_mut.as_mut().unwrap().increase_reputation()
-            });
-            Self::deposit_event(Event::ServicerReputationIncreased {
-                who,
-                on,
-                by,
-            });
+            Self::rep_increase_by_attester_id(by, on)?;
 
             Ok(Pays::No.into())
         }
@@ -553,21 +585,7 @@ pub mod pallet {
         #[pallet::weight(Weight::from_parts(0, 8192))] // TODO: please benchmark
         pub fn md_rep_decrease(origin: OriginFor<T>, on: AttesterId) -> DispatchResultWithPostInfo {
             let by = Self::ensure_and_get_signed_mediator(origin)?;
-            ensure!(
-                <Attesters<T>>::contains_key(on),
-                <Error<T>>::AttesterDoesntExist,
-            );
-            let attester = <Attesters<T>>::get(on).unwrap();
-            ensure!(attester.binder.is_some(), <Error<T>>::AttesterIsUnbinded);
-            let who = attester.binder.unwrap();
-            <Servicers<T>>::mutate(&who, |servicers_mut| {
-                servicers_mut.as_mut().unwrap().decrease_reputation()
-            });
-            Self::deposit_event(Event::ServicerReputationDecreased {
-                who,
-                on,
-                by,
-            });
+            Self::rep_decrease_by_attester_id(by, on)?;
 
             Ok(Pays::No.into())
         }

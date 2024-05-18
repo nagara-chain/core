@@ -94,7 +94,7 @@ pub mod pallet {
     // region: Custom, Event, and Errors type
 
     /// File Information
-    #[derive(Clone, Default, Eq, PartialEq)]
+    #[derive(Clone, Eq, PartialEq)]
     #[derive(codec::Decode, codec::Encode, codec::MaxEncodedLen)]
     #[derive(sp_core::RuntimeDebug, scale_info::TypeInfo)]
     pub struct FileInformation<AccountId, FeeInToken>
@@ -105,6 +105,7 @@ pub mod pallet {
         pub uploader: AccountId,
         pub big_brother: AccountId,
         pub servicer: AccountId,
+        pub attester: ngr_svrg::AttesterId,
         pub owner: AccountId,
         pub transfer_fee: FeeInToken,
         pub download_fee: Option<FeeInToken>,
@@ -121,7 +122,7 @@ pub mod pallet {
         }
     }
 
-    #[derive(Clone, Default, Eq, PartialEq)]
+    #[derive(Clone, Eq, PartialEq)]
     #[derive(codec::Decode, codec::Encode, codec::MaxEncodedLen)]
     #[derive(sp_core::RuntimeDebug, scale_info::TypeInfo)]
     pub struct FileInformationArgs<AccountId, FeeInToken>
@@ -132,6 +133,7 @@ pub mod pallet {
         pub uploader: AccountId,
         pub big_brother: AccountId,
         pub servicer: AccountId,
+        pub attester: ngr_svrg::AttesterId,
         pub transfer_fee: FeeInToken,
         pub download_fee: Option<FeeInToken>,
         pub size: u64,
@@ -409,6 +411,7 @@ pub mod pallet {
                 uploader: args.uploader.clone(),
                 big_brother: args.big_brother.clone(),
                 servicer: args.servicer.clone(),
+                attester: args.attester.clone(),
                 owner: args.uploader.clone(),
                 transfer_fee: args.transfer_fee,
                 download_fee: args.download_fee,
@@ -451,7 +454,7 @@ pub mod pallet {
             let _ = <<T as Config>::Currency as frame_support::traits::Currency<T::AccountId>>::deposit_creating(&args.big_brother, bb_part_amount);
             Self::deposit_event(Event::UploadFeeDistributed {
                 file: file.clone(),
-                to: args.big_brother,
+                to: args.big_brother.clone(),
                 amount: bb_part_amount,
             });
             let _ = <<T as Config>::Currency as frame_support::traits::Currency<T::AccountId>>::deposit_creating(&args.servicer, servicer_part_amount);
@@ -460,6 +463,8 @@ pub mod pallet {
                 to: args.servicer,
                 amount: servicer_part_amount,
             });
+
+            ngr_svrg::Pallet::<T>::rep_increase_by_attester_id(args.big_brother, args.attester)?;
 
             Ok(())
         }
@@ -483,6 +488,7 @@ pub mod pallet {
                 servicer,
                 owner,
                 download_fee,
+                attester,
                 ..
             } = the_file;
 
@@ -517,7 +523,7 @@ pub mod pallet {
             let _ = <<T as Config>::Currency as frame_support::traits::Currency<T::AccountId>>::deposit_creating(&big_brother, half_bb_fee);
             Self::deposit_event(Event::DownloadFeeDistributed {
                 file: file.clone(),
-                to: big_brother,
+                to: big_brother.clone(),
                 amount: half_bb_fee,
             });
             let _ = <<T as Config>::Currency as frame_support::traits::Currency<T::AccountId>>::deposit_creating(&servicer, half_bb_fee);
@@ -526,6 +532,8 @@ pub mod pallet {
                 to: servicer,
                 amount: half_bb_fee,
             });
+
+            ngr_svrg::Pallet::<T>::rep_increase_by_attester_id(big_brother, attester)?;
 
             Ok(())
         }
