@@ -249,6 +249,7 @@ pub mod pallet {
                 big_brother,
                 servicer,
                 size,
+                attester,
                 ..
             } = Self::files(file).unwrap();
             let withdraw_reason = frame_support::traits::tokens::WithdrawReasons::FEE;
@@ -262,16 +263,16 @@ pub mod pallet {
                 frame_support::traits::tokens::ExistenceRequirement::KeepAlive,
             );
 
-            Self::deposit_event(Event::StorageFeePaid {
-                file: file.clone(),
-                amount: total_fee,
-            });
-
             if maybe_success.is_err() {
                 Self::delete_file(file)?;
 
                 return Ok(());
             }
+
+            Self::deposit_event(Event::StorageFeePaid {
+                file: file.clone(),
+                amount: total_fee,
+            });
 
             if spread {
                 let divider =
@@ -284,7 +285,7 @@ pub mod pallet {
                 >>::deposit_creating(&big_brother, half_fee);
                 Self::deposit_event(Event::StorageFeeDistributed {
                     file: file.clone(),
-                    to: big_brother,
+                    to: big_brother.clone(),
                     amount: half_fee,
                 });
                 let _ = <<T as Config>::Currency as frame_support::traits::Currency<
@@ -295,6 +296,7 @@ pub mod pallet {
                     to: servicer,
                     amount: half_fee,
                 });
+                ngr_svrg::Pallet::<T>::rep_increase_by_attester_id(big_brother, attester)?;
             } else {
                 let _ = <<T as Config>::Currency as frame_support::traits::Currency<
                     T::AccountId,
