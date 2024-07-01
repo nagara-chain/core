@@ -8,7 +8,7 @@ impl nagara_council_bigbrothers::Config for crate::Runtime {
     type InitialWeightToFeeMultiplier =
         crate::ConstU64<{ crate::constants::INITIAL_WEIGHT_TO_FEE_MULTIPLIER }>;
     type MaxMembers = crate::ConstU32<{ crate::constants::MAX_AUTHORITIES as u32 }>;
-    type RegistrationDepositAmount = crate::ConstU128<{ 1000 * crate::constants::TOKEN }>;
+    type RegistrationDepositAmount = crate::ConstU128<{ 200 * crate::constants::TOKEN }>;
     type RuntimeEvent = crate::RuntimeEvent;
     type RuntimeHoldReason = crate::RuntimeHoldReason;
 }
